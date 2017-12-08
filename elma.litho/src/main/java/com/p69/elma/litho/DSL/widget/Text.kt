@@ -6,8 +6,9 @@ import com.facebook.litho.widget.Text
 import com.p69.elma.litho.DSL.ElmaLithoView
 import com.p69.elma.litho.DSL.layout.ElmaLithoLayout
 
-class TextView(ctx: ComponentContext) : ElmaLithoWidgetView(ctx) {
-    private val textBuilder = Text.create(ctx)
+class TextView(ctx: ComponentContext, defStyleAttr: Int = 0, defStyleRes: Int = 0) : ElmaLithoWidgetView(ctx) {
+
+    private val textBuilder = Text.create(ctx, defStyleAttr, defStyleRes)
     override val builder: Component.Builder<*, *> = textBuilder
 
     var text: String = ""
@@ -31,16 +32,16 @@ class TextView(ctx: ComponentContext) : ElmaLithoWidgetView(ctx) {
         }
 }
 
-fun ElmaLithoLayout.text(init: TextView.()->Unit) : ElmaLithoView {
-    val text = TextView(ctx)
+fun ElmaLithoLayout.text(defStyleAttr: Int = 0, defStyleRes: Int = 0, init: TextView.() -> Unit): ElmaLithoView {
+    val text = TextView(ctx, defStyleAttr, defStyleRes)
     text.init()
     val view = ElmaLithoView.Widget(text)
     this.child(view)
     return view
 }
 
-fun text(ctx: ComponentContext, init: TextView.()->Unit) : ElmaLithoView {
-    val text = TextView(ctx)
+fun text(ctx: ComponentContext, defStyleAttr: Int = 0, defStyleRes: Int = 0, init: TextView.() -> Unit): ElmaLithoView {
+    val text = TextView(ctx, defStyleAttr, defStyleRes)
     text.init()
     return ElmaLithoView.Widget(text)
 }

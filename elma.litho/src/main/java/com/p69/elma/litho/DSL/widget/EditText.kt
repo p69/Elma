@@ -7,8 +7,8 @@ import com.p69.elma.litho.DSL.ElmaLithoView
 import com.p69.elma.litho.DSL.layout.ElmaLithoLayout
 import com.p69.elma.litho.DSL.textChangedEventHandler
 
-class EditTextView(ctx: ComponentContext) : ElmaLithoWidgetView(ctx) {
-    private val editTextBuilder: EditText.Builder = EditText.create(ctx)
+class EditTextView(ctx: ComponentContext, defStyleAttr: Int = 0, defStyleRes: Int = 0) : ElmaLithoWidgetView(ctx) {
+    private val editTextBuilder: EditText.Builder = EditText.create(ctx, defStyleAttr, defStyleRes)
     override val builder: Component.Builder<*, *> = editTextBuilder
 
     var editable: Boolean = true
@@ -32,16 +32,16 @@ class EditTextView(ctx: ComponentContext) : ElmaLithoWidgetView(ctx) {
         }
 }
 
-fun ElmaLithoLayout.editText(init: EditTextView.()->Unit) : ElmaLithoView {
-    val editText = EditTextView(ctx)
+fun ElmaLithoLayout.editText(defStyleAttr: Int = 0, defStyleRes: Int = 0, init: EditTextView.() -> Unit): ElmaLithoView {
+    val editText = EditTextView(ctx, defStyleAttr, defStyleRes)
     editText.init()
     val view = ElmaLithoView.Widget(editText)
     this.child(view)
     return view
 }
 
-fun editText(ctx: ComponentContext, init: EditTextView.()->Unit) : ElmaLithoView {
-    val editText = EditTextView(ctx)
+fun editText(ctx: ComponentContext, defStyleAttr: Int = 0, defStyleRes: Int = 0, init: EditTextView.() -> Unit): ElmaLithoView {
+    val editText = EditTextView(ctx, defStyleAttr, defStyleRes)
     editText.init()
     return ElmaLithoView.Widget(editText)
 }
