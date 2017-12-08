@@ -1,7 +1,10 @@
 package com.p69.elma.litho.DSL.widget
 
+import android.graphics.drawable.Drawable
 import com.facebook.litho.Component
 import com.facebook.litho.ComponentContext
+import com.facebook.litho.reference.Reference
+import com.facebook.yoga.YogaEdge
 import com.p69.elma.litho.DSL.DSL
 import com.p69.elma.litho.DSL.clickHandler
 
@@ -22,4 +25,28 @@ abstract class ElmaLithoWidgetView(val ctx: ComponentContext) {
         set(value) {
             builder.clickHandler(value)
         }
+
+    var backgroundAttr: Int = 0
+        set(value) {
+            builder.backgroundAttr(value)
+        }
+
+    var backgroundRes: Int = 0
+        set(value) {
+            builder.backgroundRes(value)
+        }
+
+    var background: Reference<Drawable>? = null
+        set(value) {
+            builder.background(value)
+        }
+
+    var backgroundDrawable: Drawable? = null
+        set(value) {
+            builder.background(value)
+        }
+
+    fun paddingDip(edge: YogaEdge, dip: Float) {
+        builder.paddingDip(edge, dip)
+    }
 }

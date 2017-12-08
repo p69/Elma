@@ -1,8 +1,9 @@
 package com.example.pavelshilyagov.tryelmish.search
 
 import com.facebook.litho.ComponentContext
+import com.facebook.yoga.YogaEdge
 import com.p69.elma.core.Dispatch
-import com.p69.elma.litho.DSL.*
+import com.p69.elma.litho.DSL.ElmaLithoView
 import com.p69.elma.litho.DSL.layout.columnLayout
 import com.p69.elma.litho.DSL.widget.editText
 import com.p69.elma.litho.DSL.widget.text
@@ -20,7 +21,9 @@ object SearchUI {
                     onTextChanged = { v -> launch { dispatcher(SearchMsg.OnTextChanged(v)) } }
                 }
                 text {
-                    text = "search"
+                    text = "search".toUpperCase()
+                    backgroundAttr = android.R.attr.selectableItemBackground
+                    paddingDip(YogaEdge.ALL, 15f)
                     textSizeDip = 18f
                     enabled = !model.isLoading && model.searchValue.isNotEmpty()
                     onClick = { launch { dispatcher(SearchMsg.SearchByCity) } }

@@ -9,6 +9,7 @@ import com.p69.elma.core.*
 import io.michaelrocks.optional.Optional
 import kotlinx.coroutines.experimental.Deferred
 import kotlinx.coroutines.experimental.async
+import kotlinx.coroutines.experimental.delay
 
 object Search {
     fun init(): SearchModel {
@@ -39,6 +40,7 @@ object Search {
 }
 
 private suspend fun requestByQuery(query:String): Deferred<Json.Response> = async {
+    delay(300) // to make sure that ripple animation is finished :D
     val (_,_,res) = Fuel.request(WeatherApi.currentFor(query)).responseObject(deserializer = Json.CurrentDeserializer())
     return@async when (res) {
         is Result.Success -> res.value
