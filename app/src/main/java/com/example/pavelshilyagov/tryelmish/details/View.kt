@@ -2,22 +2,22 @@ package com.example.pavelshilyagov.tryelmish.details
 
 
 import com.example.pavelshilyagov.tryelmish.search.CurrentWeatherModel
-import com.facebook.litho.Column
 import com.facebook.litho.ComponentContext
-import com.facebook.litho.widget.Text
-import com.p69.elma.core.*
-import com.p69.elma.litho.ElmaLithoView
+import com.p69.elma.core.Dispatch
+import com.p69.elma.litho.DSL.*
+import com.p69.elma.litho.DSL.layout.columnLayout
+import com.p69.elma.litho.DSL.widget.text
 
 object DetailsUI {
-    fun view(model: DetailsModel, ctx: ComponentContext, dispatcher: Dispatch<DetailsMsg>): ElmaLithoView = ElmaLithoView.ComponentLayoutView(
-        Column.create(ctx)
-                .child(Text.create(ctx)
-                        .isSingleLine(false)
-                        .maxLines(10)
-                        .textSizeDip(16f)
-                        .text(createDescriptionText(model.weather)))
-                .build()
-    )
+    fun view(model: DetailsModel, ctx: ComponentContext, dispatcher: Dispatch<DetailsMsg>): ElmaLithoView =
+            columnLayout(ctx) {
+                text {
+                    isSingleLine = false
+                    maxLines = 10
+                    textSizeDip = 16f
+                    text = createDescriptionText(model.weather)
+                }
+            }
 
     private fun createDescriptionText(weather: CurrentWeatherModel): String =
             """Temperature: ${weather.temperature} ℃ / feels like ${weather.feelsLike} ℃

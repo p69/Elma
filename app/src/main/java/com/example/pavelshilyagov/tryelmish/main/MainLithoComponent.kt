@@ -5,7 +5,7 @@ import com.example.pavelshilyagov.tryelmish.hideVirtualKeyboard
 import com.example.pavelshilyagov.tryelmish.search.Search
 import com.facebook.litho.ComponentContext
 import com.p69.elma.core.*
-import com.p69.elma.litho.ElmaLithoView
+import com.p69.elma.litho.DSL.ElmaLithoView
 import java.util.*
 
 
@@ -32,5 +32,5 @@ class MainLithoComponent(private val context:ComponentContext, private val activ
         }
     }
 
-    override fun view(model: MainModel, dispatch: Dispatch<Msg>): ElmaLithoView = MainLithoUI.view(model, context, dispatch)
+    override fun view(model: MainModel, dispatch: Dispatch<Msg>): ElmaLithoView = MainUI.view(model, context, dispatch)
 }

@@ -3,18 +3,13 @@ package com.p69.elma.litho
 
 import android.support.v4.app.SupportActivity
 import com.facebook.litho.*
-import com.facebook.litho.Component
 import com.facebook.litho.annotations.LayoutSpec
 import com.facebook.litho.annotations.OnCreateLayout
 import com.facebook.litho.annotations.Prop
 import com.p69.elma.core.Dispatch
 import com.p69.elma.core.Program
+import com.p69.elma.litho.DSL.ElmaLithoView
 
-
-sealed class ElmaLithoView {
-    data class ComponentView(val component: Component<*>) : ElmaLithoView()
-    data class ComponentLayoutView(val componentLayout: ComponentLayout) : ElmaLithoView()
-}
 
 sealed class RootModel {
     class None : RootModel()
@@ -32,8 +27,8 @@ class LithoRootComponentSpec {
             is RootModel.Some -> {
                 val child = model.view(model.appModel, model.dispatcher)
                 when (child) {
-                    is ElmaLithoView.ComponentView -> Column.create(context).child(child.component).build()
-                    is ElmaLithoView.ComponentLayoutView -> Column.create(context).child(child.componentLayout).build()
+                    is ElmaLithoView.Widget -> Column.create(context).child(child.view.builder).build()
+                    is ElmaLithoView.Layout -> Column.create(context).child(child.view.builder).build()
                 }
             }
         }

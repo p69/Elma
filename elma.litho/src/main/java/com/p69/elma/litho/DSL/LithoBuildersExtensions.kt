@@ -13,7 +13,7 @@ fun (Component.Builder<*, *>).clickHandler(handler: () -> Unit): Component.Build
     return this
 }
 
-fun (EditText.Builder).textChangedEventHandler(handler: (String) -> Unit): Component.Builder<*, *> {
+fun (EditText.Builder).textChangedEventHandler(handler: (String) -> Unit): EditText.Builder {
     val dispatcher = createEventDispatcher(handler)
     this.textChangedEventHandler(com.facebook.litho.EventHandler<TextChangedEvent>(dispatcher, "elmishTextChangedHandler", 1, null))
     return this
