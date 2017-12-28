@@ -44,3 +44,4 @@ captures/
 /build
 /captures
 .externalNativeBuild
+*.iml
