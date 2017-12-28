@@ -161,7 +161,6 @@
     <orderEntry type="library" name="io.michaelrocks:optional:1.0.1@jar" level="project" />
     <orderEntry type="library" name="com.facebook.fbui.textlayoutbuilder:staticlayout-proxy:1.1@jar" level="project" />
     <orderEntry type="library" name="com.github.kittinunf.fuel:fuel-android-1.11.0" level="project" />
-    <orderEntry type="library" name="com.facebook.litho:litho-annotations:0.9.0@jar" level="project" />
     <orderEntry type="library" scope="TEST" name="net.sf.kxml:kxml2:2.3.0@jar" level="project" />
     <orderEntry type="library" name="com.facebook.yoga:yoga-1.7.0" level="project" />
     <orderEntry type="library" name="com.android.support:support-fragment-27.0.2" level="project" />
@@ -173,11 +172,12 @@
     <orderEntry type="library" scope="TEST" name="junit:junit:4.12@jar" level="project" />
     <orderEntry type="library" scope="TEST" name="com.android.support.test.espresso:espresso-core-3.0.1" level="project" />
     <orderEntry type="library" scope="TEST" name="javax.inject:javax.inject:1@jar" level="project" />
+    <orderEntry type="library" name="com.facebook.litho:litho-core-0.11.0" level="project" />
     <orderEntry type="library" name="com.facebook.infer.annotation:infer-annotation:0.11.2@jar" level="project" />
-    <orderEntry type="library" name="com.facebook.litho:litho-widget-0.9.0" level="project" />
     <orderEntry type="library" name="com.github.kittinunf.result:result:1.2.0@jar" level="project" />
     <orderEntry type="library" scope="TEST" name="com.android.support.test:rules-1.0.1" level="project" />
     <orderEntry type="library" name="io.reactivex.rxjava2:rxjava:2.1.5@jar" level="project" />
+    <orderEntry type="library" name="com.facebook.litho:litho-annotations:0.11.0@jar" level="project" />
     <orderEntry type="library" name="android.arch.lifecycle:common:1.0.3@jar" level="project" />
     <orderEntry type="library" name="io.reactivex.rxjava2:rxandroid-2.0.1" level="project" />
     <orderEntry type="library" name="org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.2.0@jar" level="project" />
@@ -187,7 +187,7 @@
     <orderEntry type="library" name="org.jetbrains:annotations:13.0@jar" level="project" />
     <orderEntry type="library" name="com.android.support:support-core-utils-27.0.2" level="project" />
     <orderEntry type="library" name="com.trello.navi2:navi-2.0" level="project" />
-    <orderEntry type="library" name="com.facebook.litho:litho-core-0.9.0" level="project" />
+    <orderEntry type="library" name="com.facebook.litho:litho-widget-0.11.0" level="project" />
     <orderEntry type="module" module-name="elma.litho" />
     <orderEntry type="module" module-name="elma.core" />
   </component>
