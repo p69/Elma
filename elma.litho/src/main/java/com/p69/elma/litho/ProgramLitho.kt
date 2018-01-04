@@ -27,8 +27,8 @@ class LithoRootComponentSpec {
             is RootModel.Some -> {
                 val child = model.view(model.appModel, model.dispatcher)
                 when (child) {
-                    is ElmaLithoView.Widget -> Column.create(context).child(child.view.builder).build()
-                    is ElmaLithoView.Layout -> Column.create(context).child(child.view.builder).build()
+                    is ElmaLithoView.Widget -> Column.create(context).child(child.builder).build()
+                    is ElmaLithoView.Layout -> Column.create(context).child(child.builder).build()
                 }
             }
         }

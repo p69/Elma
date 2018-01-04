@@ -14,5 +14,5 @@ class ColumnLayout(ctx: ComponentContext, defStyleAttr: Int = 0, defStyleRes: In
 fun columnLayout(ctx: ComponentContext, defStyleAttr: Int = 0, defStyleRes: Int = 0, init: ColumnLayout.() -> Unit): ElmaLithoView {
     val layout = ColumnLayout(ctx, defStyleAttr, defStyleRes)
     layout.init()
-    return ElmaLithoView.Layout(layout)
+    return ElmaLithoView.Layout(layout.builder)
 }

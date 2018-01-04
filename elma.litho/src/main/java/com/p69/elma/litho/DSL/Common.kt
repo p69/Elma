@@ -1,12 +1,12 @@
 package com.p69.elma.litho.DSL
 
-import com.p69.elma.litho.DSL.layout.ElmaLithoLayout
-import com.p69.elma.litho.DSL.widget.ElmaLithoWidgetView
+import com.facebook.litho.Component
+import com.facebook.litho.ComponentLayout
 
 @DslMarker
 annotation class DSL
 
 sealed class ElmaLithoView {
-    data class Layout(val view: ElmaLithoLayout) : ElmaLithoView()
-    data class Widget(val view: ElmaLithoWidgetView) : ElmaLithoView()
+    data class Layout(val builder: ComponentLayout.ContainerBuilder) : ElmaLithoView()
+    data class Widget(val builder: Component.Builder<*, *>) : ElmaLithoView()
 }

@@ -1,7 +1,8 @@
 package com.example.pavelshilyagov.tryelmish.main
 
-import com.example.pavelshilyagov.tryelmish.ScreenWithTransitionDSL.screenWithTransition
+
 import com.example.pavelshilyagov.tryelmish.details.DetailsUI
+import com.example.pavelshilyagov.tryelmish.screenWithTransition
 import com.example.pavelshilyagov.tryelmish.search.SearchUI
 import com.facebook.litho.ComponentContext
 import com.p69.elma.core.Dispatch
@@ -13,7 +14,7 @@ object MainUI {
             screenWithTransition(ctx) {
                 val (screenView, screenKey) = createView(model.screen, ctx, dispatch)
                 screen(screenView)
-                key = screenKey
+                screenKey(screenKey)
             }
 
     private fun createView(screen: Screen, ctx: ComponentContext, dispatch: Dispatch<Msg>): Pair<ElmaLithoView, String> =

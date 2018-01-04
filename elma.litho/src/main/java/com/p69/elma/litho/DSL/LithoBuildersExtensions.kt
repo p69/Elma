@@ -7,13 +7,13 @@ import com.facebook.litho.HasEventDispatcher
 import com.facebook.litho.widget.EditText
 import com.facebook.litho.widget.TextChangedEvent
 
-fun (Component.Builder<*, *>).clickHandler(handler: () -> Unit): Component.Builder<*, *> {
+fun <C : Component<out Component<*>>, B : Component.Builder<C, B>> (Component.Builder<C, B>).onClick(handler: () -> Unit): Component.Builder<*, *> {
     val dispatcher = createEventDispatcher(handler)
     this.clickHandler(EventHandler(dispatcher, "elmishClickHandler", 1, null))
     return this
 }
 
-fun (EditText.Builder).textChangedEventHandler(handler: (String) -> Unit): EditText.Builder {
+fun (EditText.Builder).onTextChanged(handler: (String) -> Unit): EditText.Builder {
     val dispatcher = createEventDispatcher(handler)
     this.textChangedEventHandler(com.facebook.litho.EventHandler<TextChangedEvent>(dispatcher, "elmishTextChangedHandler", 1, null))
     return this

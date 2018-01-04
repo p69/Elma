@@ -11,8 +11,7 @@ import com.facebook.litho.annotations.OnCreateLayout
 import com.facebook.litho.annotations.OnCreateTransition
 import com.facebook.litho.annotations.Prop
 import com.p69.elma.litho.DSL.ElmaLithoView
-import com.p69.elma.litho.DSL.layout.ElmaLithoLayout
-import com.p69.elma.litho.DSL.widget.ElmaLithoWidgetView
+import com.p69.elma.litho.DSL.widget
 
 
 @LayoutSpec
@@ -22,8 +21,8 @@ class ScreenWithTransitionSpec {
         @OnCreateLayout
         fun onCreateLayout(ctx: ComponentContext, @Prop screen: ElmaLithoView, @Prop screenKey: String): ComponentLayout {
             val layout = when (screen) {
-                is ElmaLithoView.Widget -> Column.create(ctx).child(screen.view.builder)
-                is ElmaLithoView.Layout -> Column.create(ctx).child(screen.view.builder)
+                is ElmaLithoView.Widget -> Column.create(ctx).child(screen.builder)
+                is ElmaLithoView.Layout -> Column.create(ctx).child(screen.builder)
             }
             return layout.transitionKey(screenKey).build()
         }
@@ -43,31 +42,5 @@ class ScreenWithTransitionSpec {
     }
 }
 
-object ScreenWithTransitionDSL {
-    class ScreenWithTransitionView(ctx: ComponentContext) : ElmaLithoWidgetView(ctx) {
-        override val builder: ScreenWithTransition.Builder = ScreenWithTransition.create(ctx)
-
-        fun ScreenWithTransitionView.screen(screen: ElmaLithoView) {
-            builder.screen(screen)
-        }
-
-        var key: String = ""
-            set(value) {
-                builder.screenKey(value)
-            }
-    }
-
-    fun ElmaLithoLayout.screenWithTransition(init:ScreenWithTransitionView.()->Unit) : ElmaLithoView {
-        val screenContainer = ScreenWithTransitionView(ctx)
-        screenContainer.init()
-        val view = ElmaLithoView.Widget(screenContainer)
-        this.child(view)
-        return view
-    }
-
-    fun screenWithTransition(ctx: ComponentContext, init:ScreenWithTransitionView.()->Unit) : ElmaLithoView {
-        val view = ScreenWithTransitionView(ctx)
-        view.init()
-        return ElmaLithoView.Widget(view)
-    }
-}
+fun screenWithTransition(ctx: ComponentContext, defStyleAttr: Int = 0, defStyleRes: Int = 0, init: ScreenWithTransition.Builder.() -> Unit): ElmaLithoView
+        = widget({ ScreenWithTransition.create(ctx, defStyleAttr, defStyleRes) }, init)

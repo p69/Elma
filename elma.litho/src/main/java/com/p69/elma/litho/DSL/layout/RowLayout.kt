@@ -14,5 +14,5 @@ class RowLayout(ctx: ComponentContext, defStyleAttr: Int = 0, defStyleRes: Int =
 fun rowLayout(ctx: ComponentContext, defStyleAttr: Int = 0, defStyleRes: Int = 0, init: RowLayout.() -> Unit): ElmaLithoView {
     val layout = RowLayout(ctx, defStyleAttr, defStyleRes)
     layout.init()
-    return ElmaLithoView.Layout(layout)
+    return ElmaLithoView.Layout(layout.builder)
 }

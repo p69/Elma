@@ -19,24 +19,25 @@ abstract class ElmaLithoLayout(val ctx: ComponentContext) {
         builder.child(child.build())
     }
 
-    fun ElmaLithoLayout.columnLayout(init: ColumnLayout.() -> Unit): ElmaLithoView {
-        val layout = ColumnLayout(ctx)
-        layout.init()
-        addChild(layout.builder)
-        return ElmaLithoView.Layout(layout)
-    }
-
-    fun ElmaLithoLayout.rowLayout(init: RowLayout.() -> Unit): ElmaLithoView {
-        val layout = RowLayout(ctx)
-        layout.init()
-        addChild(layout.builder)
-        return ElmaLithoView.Layout(layout)
-    }
-
-    fun ElmaLithoLayout.child(child: ElmaLithoView) {
+    fun child(child: ElmaLithoView) {
         when (child) {
-            is ElmaLithoView.Widget -> addChild(child.view.builder)
-            is ElmaLithoView.Layout -> addChild(child.view.builder)
+            is ElmaLithoView.Widget -> addChild(child.builder)
+            is ElmaLithoView.Layout -> addChild(child.builder)
         }
     }
+}
+
+fun ElmaLithoLayout.columnLayout(init: ColumnLayout.() -> Unit) {
+    val layout = ColumnLayout(this.ctx)
+    layout.init()
+    val view = ElmaLithoView.Layout(layout.builder)
+    this.child(view)
+
+}
+
+fun ElmaLithoLayout.rowLayout(init: RowLayout.() -> Unit) {
+    val layout = RowLayout(this.ctx)
+    layout.init()
+    val view = ElmaLithoView.Layout(layout.builder)
+    this.child(view)
 }
