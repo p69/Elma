@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/android-elmish.iml" filepath="$PROJECT_DIR$/android-elmish.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Elma.iml" filepath="$PROJECT_DIR$/Elma.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/elma.anvil/elma.anvil.iml" filepath="$PROJECT_DIR$/elma.anvil/elma.anvil.iml" />
       <module fileurl="file://$PROJECT_DIR$/elma.core/elma.core.iml" filepath="$PROJECT_DIR$/elma.core/elma.core.iml" />
