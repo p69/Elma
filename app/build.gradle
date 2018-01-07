@@ -37,14 +37,11 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
-    compile 'org.jetbrains.kotlinx:kotlinx-coroutines-core:0.20'
-    compile 'org.jetbrains.kotlinx:kotlinx-coroutines-android:0.20'
+    compile "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
+    compile "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
     compile 'com.github.kittinunf.fuel:fuel-android:1.11.0'
     compile 'com.github.kittinunf.fuel:fuel-gson:1.11.0'
     compile 'io.michaelrocks:optional:1.0.1'
-    compile 'com.trello.navi2:navi:2.0'
-    compile "io.reactivex.rxjava2:rxandroid:$rx_android_version"
-    compile "io.reactivex.rxjava2:rxjava:$rx_java_version"
     // Litho
     implementation "com.facebook.litho:litho-core:$litho_version"
     implementation "com.facebook.litho:litho-widget:$litho_version"
