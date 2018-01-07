@@ -1,1 +1,1 @@
-include ':app', ':elma.core', ':elma.litho', ':elma.anvil'
+include ':app', ':elma.core', ':elma.litho', ':elma.anvil', ':hearthstoneexplorer'
