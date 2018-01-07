@@ -5,7 +5,6 @@ import com.facebook.yoga.YogaEdge
 import com.p69.elma.core.Dispatch
 import com.p69.elma.litho.DSL.*
 import io.michaelrocks.optional.Optional
-import kotlinx.coroutines.experimental.launch
 
 object SearchUI {
     fun view(model: SearchModel, ctx: ComponentContext, dispatcher: Dispatch<SearchMsg>): ElmaLithoView =
@@ -16,7 +15,7 @@ object SearchUI {
                         editable(true)
                         textSizeDip(16f)
                         text(model.searchValue)
-                        onTextChanged { txt -> launch { dispatcher(SearchMsg.OnTextChanged(txt)) } }
+                        onTextChanged { txt -> dispatcher(SearchMsg.OnTextChanged(txt)) }
                         column {  }
                     }
                     text {
@@ -25,7 +24,7 @@ object SearchUI {
                         paddingDip(YogaEdge.ALL, 15f)
                         textSizeDip(18f)
                         enabled(!model.isLoading && model.searchValue.isNotEmpty())
-                        onClick { launch { dispatcher(SearchMsg.SearchByCity) } }
+                        onClick { dispatcher(SearchMsg.SearchByCity) }
                     }
                     text {
                         textSizeDip(14f)
@@ -57,6 +56,6 @@ object SearchUI {
             text(ctx) {
                 text("show details")
                 textSizeDip(18f)
-                onClick { launch { dispatcher(SearchMsg.ShowDetails(details)) } }
+                onClick { dispatcher(SearchMsg.ShowDetails(details)) }
             }
 }

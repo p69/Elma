@@ -3,6 +3,7 @@ package com.p69.elma.core
 import android.util.Log
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.channels.actor
+import kotlinx.coroutines.experimental.launch
 
 /**
  * Data class which represents results of updates iteration
@@ -106,20 +107,20 @@ fun <TArg, TModel, TMsg, TView> (Program<TArg, TModel, TMsg, TView>).runWith(arg
             try {
                 val (updatedModel, effects) = program.update(msg, currentModel)
                 currentModel = updatedModel
-                program.setState(currentModel, { m ->  channel.send(m) })
+                program.setState(currentModel, { m -> launch { channel.send(m) } })
 
                 for (effect in effects) {
-                    effect({ m ->channel.send(m)})
+                    effect({ m -> launch { channel.send(m) } })
                 }
             } catch (e: Exception) {
                 program.onError(Pair("Failed while processing message.", e))
             }
         }
     }
-    program.setState(initialModel, { m ->  loop.send(m) })
+    program.setState(initialModel, { m -> launch { loop.send(m) } })
 
     val effects = initialEffects + program.subscribe(initialModel)
-    effects.forEach { it({ m -> loop.send(m) }) }
+    effects.forEach { it({ m -> launch { loop.send(m) } }) }
 }
 
 fun <TModel, TMsg, TView> (Program<Unit, TModel, TMsg, TView>).run() = runWith(Unit)

@@ -2,7 +2,7 @@ package com.p69.elma.core
 
 import kotlinx.coroutines.experimental.*
 
-typealias Dispatch<TMsg> = suspend (TMsg) -> Unit
+typealias Dispatch<TMsg> = (TMsg) -> Unit
 
 typealias Sub<TMsg> = (Dispatch<TMsg>) -> Unit
 
@@ -13,15 +13,16 @@ object CmdF {
     inline val none: Cmd<*>
         get() = emptyList()
 
-    fun <TMsg> ofMsg(msg: TMsg): Cmd<TMsg> = listOf({ dispatch -> launch { dispatch(msg) } })
+    fun <TMsg> ofMsg(msg: TMsg): Cmd<TMsg> = listOf({ dispatch -> dispatch(msg) })
 
     fun <TMsg> ofSub(sub: Sub<TMsg>): Cmd<TMsg> = listOf(sub)
 
     fun <T, TMsg> map(f: (T) -> TMsg, cmd: Cmd<T>): Cmd<TMsg> {
         return cmd.map { dispatcher: (Dispatch<T>) -> Unit ->
-            val dispatcherMapper: (Dispatch<TMsg>) -> Dispatch<T> = { dispatch: Dispatch<TMsg> -> { x: T -> launch { dispatch(f(x)) } } }
+            val dispatcherMapper: (Dispatch<TMsg>) -> Dispatch<T> = { dispatch: Dispatch<TMsg> ->
+                { x: T -> dispatch(f(x)) }
+            }
             { d: Dispatch<TMsg> -> dispatcher(dispatcherMapper(d)) }
-            //dispatcherMapper then dispatcher
         }
     }
 
