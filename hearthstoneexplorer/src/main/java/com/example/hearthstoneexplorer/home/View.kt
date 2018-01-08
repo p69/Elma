@@ -10,7 +10,7 @@ object HomeUI {
                 children(c) {
                     text {
                         textSizeDip(14f)
-                        text("Hello, ${model.msg}")
+                        text("Hello, there!")
                     }
                 }
             }

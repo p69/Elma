@@ -1,11 +1,14 @@
 package com.example.hearthstoneexplorer.home
 
-data class HomeModel(val msg: String)
+import com.example.hearthstoneexplorer.domain.*
+
+data class HomeModel(val cards: List<Card>)
 
 sealed class HomeMsg {
     object Back : HomeMsg()
     object Exit : HomeMsg()
     object HideVirtualKeyboard : HomeMsg()
 
-    data class SayHi(val whom: String) : HomeMsg()
+    data class OnCardsLoaded(val cards: List<Card>) : HomeMsg()
+    data class OnError(val error: Throwable) : HomeMsg()
 }
