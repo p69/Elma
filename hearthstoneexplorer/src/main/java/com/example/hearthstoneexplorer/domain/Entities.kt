@@ -51,8 +51,8 @@ data class Card(
         val playerClass: PlayerClass,
         val img: String,
         val imgGold: String,
-        val locale: String,
-        val mechanics: Array<String>
+        val locale: String
+        //val mechanics: List<String>
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

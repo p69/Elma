@@ -1,8 +1,9 @@
 package com.example.hearthstoneexplorer.home
 
 import com.example.hearthstoneexplorer.domain.*
+import io.michaelrocks.optional.Optional
 
-data class HomeModel(val cards: List<Card>)
+data class HomeModel(val cards: List<Card>, val error: Optional<Throwable> = Optional.None)
 
 sealed class HomeMsg {
     object Back : HomeMsg()
