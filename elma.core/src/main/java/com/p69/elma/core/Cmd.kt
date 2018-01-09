@@ -33,13 +33,13 @@ object CmdF {
     fun <TMsg> batch(vararg cmds: Cmd<TMsg>): Cmd<TMsg> = cmds.toList().flatten()
 
     fun <TArg, TResult, TMsg> ofAsyncFunc(
-            task: suspend (TArg) -> Deferred<TResult>,
+            task: suspend (TArg) -> TResult,
             arg: TArg,
             ofSuccess: (TResult) -> TMsg,
             ofError: (Exception) -> TMsg): Cmd<TMsg> = cmd { dispatch ->
         launch(start = CoroutineStart.UNDISPATCHED) {
             try {
-                val res = task(arg).await()
+                val res = task(arg)
                 dispatch(ofSuccess(res))
             } catch (ex: Exception) {
                 dispatch(ofError(ex))
@@ -81,7 +81,7 @@ object CmdF {
         try {
             task(arg)
         } catch (ex: Exception) {
-            launch { dispatch(ofError(ex)) }
+            dispatch(ofError(ex))
         }
     }
 }

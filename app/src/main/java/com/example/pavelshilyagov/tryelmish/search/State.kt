@@ -7,9 +7,7 @@ import com.github.kittinunf.fuel.Fuel
 import com.github.kittinunf.result.Result
 import com.p69.elma.core.*
 import io.michaelrocks.optional.Optional
-import kotlinx.coroutines.experimental.Deferred
-import kotlinx.coroutines.experimental.async
-import kotlinx.coroutines.experimental.delay
+import kotlinx.coroutines.experimental.*
 
 object Search {
     fun init(): SearchModel {
@@ -39,10 +37,10 @@ object Search {
     }
 }
 
-private suspend fun requestByQuery(query:String): Deferred<Json.Response> = async {
+private suspend fun requestByQuery(query:String): Json.Response = withContext(CommonPool) {
     delay(300) // to make sure that ripple animation is finished :D
     val (_,_,res) = Fuel.request(WeatherApi.currentFor(query)).responseObject(deserializer = Json.CurrentDeserializer())
-    return@async when (res) {
+    return@withContext when (res) {
         is Result.Success -> res.value
         is Result.Failure -> throw res.error
     }

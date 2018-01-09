@@ -8,10 +8,7 @@ import com.github.kittinunf.result.Result
 import com.p69.elma.core.CmdF
 import com.p69.elma.core.UpdateResult
 import io.michaelrocks.optional.Optional
-import kotlinx.coroutines.experimental.CommonPool
-import kotlinx.coroutines.experimental.Deferred
-import kotlinx.coroutines.experimental.async
-import kotlinx.coroutines.experimental.delay
+import kotlinx.coroutines.experimental.*
 
 
 object Home {
@@ -35,10 +32,10 @@ object Home {
         }
     }
 
-    private suspend fun searchByQuery(query: String): Deferred<List<Card>> = async(CommonPool) {
+    private suspend fun searchByQuery(query: String): List<Card> = withContext(CommonPool) {
         delay(300)
         val (_, _, res) = Fuel.request(HearthstoneApi.search(query)).responseString()
-        return@async when (res) {
+        return@withContext when (res) {
             is Result.Success -> {
                 val cards = parseCards(res.value)
                 cards
