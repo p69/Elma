@@ -32,6 +32,8 @@ sealed class PlayerClass(val name: String) {
     object Warrior : PlayerClass("Warrior")
 }
 
+data class Mechanic(val name: String)
+
 data class Card(
         val cardId: String,
         val dbfId: String,
@@ -51,8 +53,8 @@ data class Card(
         val playerClass: PlayerClass,
         val img: String,
         val imgGold: String,
-        val locale: String
-        //val mechanics: List<String>
+        val locale: String,
+        val mechanics: List<Mechanic>
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

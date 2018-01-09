@@ -24,13 +24,7 @@ import kotlinx.coroutines.experimental.delay
 class RootComponent(private val context: ComponentContext, private val activity: AppCompatActivity) : ElmaComponent<Unit, HomeModel, HomeMsg, ElmaLithoView> {
     override fun init(args: Unit): UpdateResult<HomeModel, HomeMsg> {
         val model = HomeModel(cards = emptyList())
-        val initLoadCmd = CmdF.ofAsyncFunc(
-                {q-> searchByQuery(q)},
-                "worldshaker",
-                HomeMsg::OnCardsLoaded,
-                HomeMsg::OnError
-        )
-        return UpdateResult(model, initLoadCmd)
+        return UpdateResult(model)
     }
 
     override fun update(msg: HomeMsg, model: HomeModel): UpdateResult<HomeModel, HomeMsg> {
@@ -49,16 +43,4 @@ class RootComponent(private val context: ComponentContext, private val activity:
 
     override fun view(model: HomeModel, dispatch: Dispatch<HomeMsg>): ElmaLithoView =
             HomeUI.view(model, context, dispatch)
-}
-
-private suspend fun searchByQuery(query: String): Deferred<List<Card>> = async {
-    delay(300)
-    val (_, _, res) = Fuel.request(HearthstoneApi.search(query)).responseString()
-    return@async when (res) {
-        is Result.Success -> {
-            val cards = parseCards(res.value)
-            cards
-        }
-        is Result.Failure -> throw res.error
-    }
 }
