@@ -17,6 +17,8 @@ object CmdF {
 
     fun <TMsg> ofSub(sub: Sub<TMsg>): Cmd<TMsg> = listOf(sub)
 
+    fun <TMsg> cmd(action: (Dispatch<TMsg>)->Unit): Cmd<TMsg> = listOf(action)
+
     fun <T, TMsg> map(f: (T) -> TMsg, cmd: Cmd<T>): Cmd<TMsg> {
         return cmd.map { dispatcher: (Dispatch<T>) -> Unit ->
             val dispatcherMapper: (Dispatch<TMsg>) -> Dispatch<T> = { dispatch: Dispatch<TMsg> ->
@@ -34,8 +36,8 @@ object CmdF {
             task: suspend (TArg) -> Deferred<TResult>,
             arg: TArg,
             ofSuccess: (TResult) -> TMsg,
-            ofError: (Exception) -> TMsg): Cmd<TMsg> {
-        fun bind(dispatch: Dispatch<TMsg>) = runBlocking(Unconfined) {
+            ofError: (Exception) -> TMsg): Cmd<TMsg> = cmd { dispatch ->
+        launch(start = CoroutineStart.UNDISPATCHED) {
             try {
                 val res = task(arg).await()
                 dispatch(ofSuccess(res))
@@ -43,52 +45,43 @@ object CmdF {
                 dispatch(ofError(ex))
             }
         }
-        return listOf(::bind)
     }
+
 
     fun <TArg, TResult, TMsg> ofFunc(
             task: (TArg) -> TResult,
             arg: TArg,
             ofSuccess: (TResult) -> TMsg,
-            ofError: (Exception) -> TMsg): Cmd<TMsg> {
-        fun bind(dispatch: Dispatch<TMsg>) {
-            try {
-                val res = task(arg)
-                launch { dispatch(ofSuccess(res)) }
-            } catch (ex: Exception) {
-                launch { dispatch(ofError(ex)) }
-            }
+            ofError: (Exception) -> TMsg): Cmd<TMsg> = cmd { dispatch ->
+        try {
+            val res = task(arg)
+            dispatch(ofSuccess(res))
+        } catch (ex: Exception) {
+            dispatch(ofError(ex))
         }
-        return listOf(::bind)
     }
 
     fun <TArg, TResult, TMsg> performFunc(
             task: (TArg) -> TResult,
             arg: TArg,
             ofSuccess: (TResult) -> TMsg
-    ): Cmd<TMsg> {
-        fun bind(dispatch: Dispatch<TMsg>) {
-            try {
-                val res = task(arg)
-                launch { dispatch(ofSuccess(res)) }
-            } catch (_: Exception) {
-            }
+    ): Cmd<TMsg> = cmd { dispatch ->
+        try {
+            val res = task(arg)
+            dispatch(ofSuccess(res))
+        } catch (_: Exception) {
         }
-        return listOf(::bind)
     }
 
     fun <TArg, TMsg> attemptFunc(
             task: (TArg) -> Unit,
             arg: TArg,
             ofError: (Exception) -> TMsg
-    ): Cmd<TMsg> {
-        fun bind(dispatch: Dispatch<TMsg>) {
-            try {
-                task(arg)
-            } catch (ex: Exception) {
-                launch { dispatch(ofError(ex)) }
-            }
+    ): Cmd<TMsg> = cmd { dispatch ->
+        try {
+            task(arg)
+        } catch (ex: Exception) {
+            launch { dispatch(ofError(ex)) }
         }
-        return listOf(::bind)
     }
 }
