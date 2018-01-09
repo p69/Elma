@@ -51,3 +51,5 @@ captures/
 /captures
 .externalNativeBuild
 hearthstoneexplorer/src/main/java/com/example/hearthstoneexplorer/ApiKeys\.kt
+
+\.idea/
