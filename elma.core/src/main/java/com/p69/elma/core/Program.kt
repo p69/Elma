@@ -1,6 +1,7 @@
 package com.p69.elma.core
 
 import android.util.Log
+import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.channels.Channel
 import kotlinx.coroutines.experimental.channels.actor
@@ -99,19 +100,21 @@ fun <TArg, TModel, TMsg, TView> (Program<TArg, TModel, TMsg, TView>).withSubscri
     )
 }
 
-fun <TArg, TModel, TMsg, TView> (Program<TArg, TModel, TMsg, TView>).runWith(arg: TArg, mailBoxCapacity: Int = Channel.CONFLATED) {
+fun <TArg, TModel, TMsg, TView> (Program<TArg, TModel, TMsg, TView>).runWith(arg: TArg, mailBoxCapacity: Int = Channel.CONFLATED, rootJob: Job? = null) {
     val program = this
     val (initialModel, initialEffects) = program.init(arg)
     var currentModel = initialModel
-    val loop = actor<TMsg>(context = UI, capacity = mailBoxCapacity) {
+    val loop = actor<TMsg>(context = UI, parent = rootJob, capacity = mailBoxCapacity) {
         for (msg in channel) {
             try {
-                val (updatedModel, effects) = program.update(msg, currentModel)
-                currentModel = updatedModel
-                program.setState(currentModel, { m -> channel.offer(m) })
+                if (isActive) {
+                    val (updatedModel, effects) = program.update(msg, currentModel)
+                    currentModel = updatedModel
+                    program.setState(currentModel, { m -> channel.offer(m) })
 
-                for (effect in effects) {
-                    effect({ m -> channel.offer(m) })
+                    for (effect in effects) {
+                        effect({ m -> channel.offer(m) })
+                    }
                 }
             } catch (e: Exception) {
                 program.onError(Pair("Failed while processing message.", e))

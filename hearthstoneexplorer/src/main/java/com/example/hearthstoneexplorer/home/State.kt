@@ -2,6 +2,7 @@ package com.example.hearthstoneexplorer.home
 
 import com.example.hearthstoneexplorer.domain.Card
 import com.example.hearthstoneexplorer.domain.HearthstoneApi
+import com.example.hearthstoneexplorer.domain.Locale
 import com.example.hearthstoneexplorer.domain.parseCards
 import com.github.kittinunf.fuel.Fuel
 import com.github.kittinunf.result.Result
@@ -33,8 +34,7 @@ object Home {
     }
 
     private suspend fun searchByQuery(query: String): List<Card> = withContext(CommonPool) {
-        delay(300)
-        val (_, _, res) = Fuel.request(HearthstoneApi.search(query)).responseString()
+        val (_, _, res) = Fuel.request(HearthstoneApi.search(query, locale = Locale.ruRU)).responseString()
         return@withContext when (res) {
             is Result.Success -> {
                 val cards = parseCards(res.value)

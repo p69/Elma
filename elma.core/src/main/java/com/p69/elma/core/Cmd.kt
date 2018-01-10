@@ -1,6 +1,7 @@
 package com.p69.elma.core
 
-import kotlinx.coroutines.experimental.*
+import kotlinx.coroutines.experimental.Job
+import kotlinx.coroutines.experimental.launch
 
 typealias Dispatch<TMsg> = (TMsg) -> Unit
 
@@ -17,7 +18,7 @@ object CmdF {
 
     fun <TMsg> ofSub(sub: Sub<TMsg>): Cmd<TMsg> = listOf(sub)
 
-    fun <TMsg> cmd(action: (Dispatch<TMsg>)->Unit): Cmd<TMsg> = listOf(action)
+    fun <TMsg> ofAction(action: (Dispatch<TMsg>)->Unit): Cmd<TMsg> = listOf(action)
 
     fun <T, TMsg> map(f: (T) -> TMsg, cmd: Cmd<T>): Cmd<TMsg> {
         return cmd.map { dispatcher: (Dispatch<T>) -> Unit ->
@@ -36,13 +37,18 @@ object CmdF {
             task: suspend (TArg) -> TResult,
             arg: TArg,
             ofSuccess: (TResult) -> TMsg,
-            ofError: (Exception) -> TMsg): Cmd<TMsg> = cmd { dispatch ->
-        launch(start = CoroutineStart.UNDISPATCHED) {
+            ofError: (Exception) -> TMsg,
+            parent: Job? = null): Cmd<TMsg> = ofAction { dispatch ->
+        launch(parent = parent) {
             try {
                 val res = task(arg)
-                dispatch(ofSuccess(res))
+                if (isActive) {
+                    dispatch(ofSuccess(res))
+                }
             } catch (ex: Exception) {
-                dispatch(ofError(ex))
+                if (isActive) {
+                    dispatch(ofError(ex))
+                }
             }
         }
     }
@@ -52,7 +58,7 @@ object CmdF {
             task: (TArg) -> TResult,
             arg: TArg,
             ofSuccess: (TResult) -> TMsg,
-            ofError: (Exception) -> TMsg): Cmd<TMsg> = cmd { dispatch ->
+            ofError: (Exception) -> TMsg): Cmd<TMsg> = ofAction { dispatch ->
         try {
             val res = task(arg)
             dispatch(ofSuccess(res))
@@ -65,7 +71,7 @@ object CmdF {
             task: (TArg) -> TResult,
             arg: TArg,
             ofSuccess: (TResult) -> TMsg
-    ): Cmd<TMsg> = cmd { dispatch ->
+    ): Cmd<TMsg> = ofAction { dispatch ->
         try {
             val res = task(arg)
             dispatch(ofSuccess(res))
@@ -77,7 +83,7 @@ object CmdF {
             task: (TArg) -> Unit,
             arg: TArg,
             ofError: (Exception) -> TMsg
-    ): Cmd<TMsg> = cmd { dispatch ->
+    ): Cmd<TMsg> = ofAction { dispatch ->
         try {
             task(arg)
         } catch (ex: Exception) {
