@@ -8,6 +8,7 @@ import com.example.pavelshilyagov.tryelmish.main.Msg
 import com.facebook.litho.ComponentContext
 import com.p69.elma.core.*
 import com.p69.elma.litho.withLitho
+import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.channels.consumeEach
 import kotlinx.coroutines.experimental.launch
 
@@ -22,7 +23,7 @@ class MainActivity : ElmaActivity<MainModel, Msg>() {
         mkProgramFromComponent(MainLithoComponent(componentContext, this))
                 .withLitho(this, componentContext)
                 .withSubscription(this::subscription)
-                .run()
+                .run(context = UI)
     }
 
     private fun subscription(model: MainModel): Cmd<Msg> {

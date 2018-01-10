@@ -7,6 +7,7 @@ import com.facebook.litho.ComponentContext
 import com.p69.elma.core.*
 import com.p69.elma.litho.withLitho
 import kotlinx.coroutines.experimental.Job
+import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.channels.consumeEach
 import kotlinx.coroutines.experimental.launch
 
@@ -30,12 +31,12 @@ class MainActivity : ElmaActivity<HomeModel, HomeMsg>() {
         mkProgramFromComponent(RootComponent(componentContext, this))
                 .withLitho(this, componentContext)
                 .withSubscription(this::subscription)
-                .runWith(Unit, rootJob = rootJob)
+                .run(context = UI + rootJob)
     }
 
     private fun subscription(model: HomeModel): Cmd<HomeMsg> {
         val sub: Sub<HomeMsg> = { dispatcher ->
-            launch {
+            launch(parent = rootJob) {
                 lifeCycleChannel.consumeEach { handleLifeCycleEvent(it, model, dispatcher) }
             }
         }

@@ -31,7 +31,6 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     compile "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
-    compile "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
 }
 repositories {
     mavenCentral()

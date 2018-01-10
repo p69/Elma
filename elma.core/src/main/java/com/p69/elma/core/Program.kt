@@ -1,11 +1,10 @@
 package com.p69.elma.core
 
 import android.util.Log
-import kotlinx.coroutines.experimental.Job
-import kotlinx.coroutines.experimental.android.UI
+import kotlinx.coroutines.experimental.DefaultDispatcher
 import kotlinx.coroutines.experimental.channels.Channel
 import kotlinx.coroutines.experimental.channels.actor
-import kotlinx.coroutines.experimental.launch
+import kotlin.coroutines.experimental.CoroutineContext
 
 /**
  * Data class which represents results of updates iteration
@@ -100,11 +99,14 @@ fun <TArg, TModel, TMsg, TView> (Program<TArg, TModel, TMsg, TView>).withSubscri
     )
 }
 
-fun <TArg, TModel, TMsg, TView> (Program<TArg, TModel, TMsg, TView>).runWith(arg: TArg, mailBoxCapacity: Int = Channel.CONFLATED, rootJob: Job? = null) {
+fun <TArg, TModel, TMsg, TView> (Program<TArg, TModel, TMsg, TView>).runWith(
+        arg: TArg,
+        mailBoxCapacity: Int = Channel.CONFLATED,
+        context: CoroutineContext= DefaultDispatcher) {
     val program = this
     val (initialModel, initialEffects) = program.init(arg)
     var currentModel = initialModel
-    val loop = actor<TMsg>(context = UI, parent = rootJob, capacity = mailBoxCapacity) {
+    val loop = actor<TMsg>(context = context, capacity = mailBoxCapacity) {
         for (msg in channel) {
             try {
                 if (isActive) {
@@ -127,4 +129,4 @@ fun <TArg, TModel, TMsg, TView> (Program<TArg, TModel, TMsg, TView>).runWith(arg
     effects.forEach { it({ m -> loop.offer(m) }) }
 }
 
-fun <TModel, TMsg, TView> (Program<Unit, TModel, TMsg, TView>).run() = runWith(Unit)
+fun <TModel, TMsg, TView> (Program<Unit, TModel, TMsg, TView>).run(mailBoxCapacity: Int = Channel.CONFLATED, context: CoroutineContext = DefaultDispatcher) = runWith(Unit, mailBoxCapacity, context)
