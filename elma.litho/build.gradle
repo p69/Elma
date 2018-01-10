@@ -37,11 +37,17 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    // Litho
+    // Litho main
     implementation "com.facebook.litho:litho-core:$litho_version"
     compileOnly "com.facebook.litho:litho-annotations:$litho_version"
     implementation "com.facebook.litho:litho-widget:$litho_version"
     kapt "com.facebook.litho:litho-processor:$litho_version"
+    // Litho Sections
+    implementation "com.facebook.litho:litho-sections-core:$litho_version"
+    implementation "com.facebook.litho:litho-sections-widget:$litho_version"
+    compileOnly "com.facebook.litho:litho-sections-annotations:$litho_version"
+    kapt "com.facebook.litho:litho-sections-processor:$litho_version"
+
     implementation project(':elma.core')
 }
 repositories {
