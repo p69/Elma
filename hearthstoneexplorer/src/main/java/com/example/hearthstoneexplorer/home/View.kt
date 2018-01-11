@@ -1,7 +1,10 @@
 package com.example.hearthstoneexplorer.home
 
 import android.graphics.Color
+import android.support.v7.widget.OrientationHelper
 import com.facebook.litho.ComponentContext
+import com.facebook.litho.widget.LinearLayoutInfo
+import com.facebook.litho.widget.RecyclerBinder
 import com.p69.elma.core.Dispatch
 import com.p69.elma.litho.DSL.*
 import io.michaelrocks.optional.Optional
@@ -22,6 +25,17 @@ object HomeUI {
                         when(model.error) {
                             is Optional.Some -> text(model.error.value.message)
                             is Optional.None -> text("")
+                        }
+                    }
+                    listSection {
+                        items {
+                            repeat(5) {
+                                text {
+                                    textSizeDip(16f)
+                                    textColor(Color.RED)
+                                    text("I'm list item")
+                                }
+                            }
                         }
                     }
                 }
