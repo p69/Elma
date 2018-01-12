@@ -35,26 +35,27 @@ sealed class PlayerClass(val name: String) {
 data class Mechanic(val name: String)
 
 data class Card(
-        val cardId: String,
-        val dbfId: String,
-        val name: String,
-        val cardSet: String,
-        val type: CardType,
-        val rarity: CardRarity,
-        val cost: Int,
-        val attack: Int,
-        val health: Int,
-        val text: String,
-        val flavor: String,
-        val artist: String,
-        val collectible: Boolean,
-        val elite: Boolean,
-        val race: String,
-        val playerClass: PlayerClass,
-        val img: String,
-        val imgGold: String,
-        val locale: String,
-        val mechanics: List<Mechanic>
+        val cardId: String = "",
+        val dbfId: String = "",
+        val name: String = "",
+        val cardSet: String = "",
+        val type: CardType = CardType.Enchantment,
+        val faction: String = "",
+        val rarity: CardRarity = CardRarity.Free,
+        val cost: Int = 0,
+        val attack: Int = 0,
+        val health: Int = 0,
+        val text: String = "",
+        val flavor: String = "",
+        val artist: String = "",
+        val collectible: Boolean = false,
+        val elite: Boolean = false,
+        val race: String = "",
+        val playerClass: PlayerClass = PlayerClass.Neutral,
+        val img: String = "",
+        val imgGold: String = "",
+        val locale: String = Locale.enUS.value,
+        val mechanics: List<Mechanic> = emptyList()
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
