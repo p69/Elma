@@ -3,6 +3,7 @@ package com.p69.elma.litho.DSL
 import com.facebook.litho.Component
 import com.facebook.litho.ComponentContext
 import com.facebook.litho.widget.*
+import com.p69.elma.litho.ElmaLithoView
 
 
 fun <C : Component<out Component<*>>, B : Component.Builder<C, B>> widget(

@@ -5,6 +5,7 @@ import com.example.pavelshilyagov.tryelmish.search.CurrentWeatherModel
 import com.facebook.litho.ComponentContext
 import com.p69.elma.core.Dispatch
 import com.p69.elma.litho.DSL.*
+import com.p69.elma.litho.ElmaLithoView
 
 object DetailsUI {
     fun view(model: DetailsModel, ctx: ComponentContext, dispatcher: Dispatch<DetailsMsg>): ElmaLithoView =

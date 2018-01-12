@@ -4,6 +4,7 @@ import com.facebook.litho.Column
 import com.facebook.litho.ComponentContext
 import com.facebook.litho.ComponentLayout
 import com.facebook.litho.Row
+import com.p69.elma.litho.ElmaLithoView
 
 class Container(val ctx: ComponentContext) {
     val children = mutableListOf<ElmaLithoView>()
@@ -28,6 +29,7 @@ fun ComponentLayout.ContainerBuilder.children(ctx: ComponentContext, init: Conta
         when (child) {
             is ElmaLithoView.Widget -> this.child(child.builder)
             is ElmaLithoView.Layout -> this.child(child.builder)
+            is ElmaLithoView.Section -> this.child(com.facebook.litho.sections.widget.RecyclerCollectionComponent.create(ctx).section(child.builder))
         }
     }
 }

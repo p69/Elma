@@ -4,6 +4,7 @@ import com.facebook.litho.ComponentContext
 import com.facebook.yoga.YogaEdge
 import com.p69.elma.core.Dispatch
 import com.p69.elma.litho.DSL.*
+import com.p69.elma.litho.ElmaLithoView
 import io.michaelrocks.optional.Optional
 
 object SearchUI {

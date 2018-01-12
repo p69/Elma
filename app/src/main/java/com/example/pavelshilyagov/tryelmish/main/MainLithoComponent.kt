@@ -5,7 +5,7 @@ import com.example.pavelshilyagov.tryelmish.hideVirtualKeyboard
 import com.example.pavelshilyagov.tryelmish.search.Search
 import com.facebook.litho.ComponentContext
 import com.p69.elma.core.*
-import com.p69.elma.litho.DSL.ElmaLithoView
+import com.p69.elma.litho.ElmaLithoView
 import java.util.*
 
 

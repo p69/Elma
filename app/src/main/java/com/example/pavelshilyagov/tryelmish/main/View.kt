@@ -6,7 +6,7 @@ import com.example.pavelshilyagov.tryelmish.screenWithTransition
 import com.example.pavelshilyagov.tryelmish.search.SearchUI
 import com.facebook.litho.ComponentContext
 import com.p69.elma.core.Dispatch
-import com.p69.elma.litho.DSL.ElmaLithoView
+import com.p69.elma.litho.ElmaLithoView
 
 
 object MainUI {

@@ -4,6 +4,7 @@ import android.os.Bundle
 import com.example.hearthstoneexplorer.home.HomeModel
 import com.example.hearthstoneexplorer.home.HomeMsg
 import com.facebook.litho.ComponentContext
+import com.facebook.litho.StateHandler
 import com.p69.elma.core.*
 import com.p69.elma.litho.withLitho
 import kotlinx.coroutines.experimental.Job
@@ -27,7 +28,7 @@ class MainActivity : ElmaActivity<HomeModel, HomeMsg>() {
     }
 
     private fun start() {
-        val componentContext = ComponentContext(this)
+        val componentContext = ComponentContext(this, StateHandler()) // Strange, but it crashes with NPE if StateHandler is not provided here
         mkProgramFromComponent(RootComponent(componentContext, this))
                 .withLitho(this, componentContext)
                 .withSubscription(this::subscription)

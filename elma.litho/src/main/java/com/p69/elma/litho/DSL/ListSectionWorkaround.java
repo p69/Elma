@@ -1,10 +1,9 @@
 package com.p69.elma.litho.DSL;
 
 
-import com.facebook.litho.Component;
 import com.facebook.litho.ComponentContext;
+import com.facebook.litho.sections.Section;
 import com.facebook.litho.sections.SectionContext;
-import com.facebook.litho.sections.widget.RecyclerCollectionComponent;
 
 public class ListSectionWorkaround {
     private final SectionContext mSectionContext;
@@ -22,8 +21,8 @@ public class ListSectionWorkaround {
         return this;
     }
 
-    public Component.Builder<?, ?> buildRecyclerCollection() {
-        return RecyclerCollectionComponent.create(mSectionContext).disablePTR(true).section(mBuilder.build());
+    public Section.Builder<?, ?> getBuilder() {
+        return mBuilder;
     }
 
     public ComponentContext getComponentContext() {

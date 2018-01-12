@@ -10,7 +10,7 @@ import com.facebook.litho.annotations.LayoutSpec
 import com.facebook.litho.annotations.OnCreateLayout
 import com.facebook.litho.annotations.OnCreateTransition
 import com.facebook.litho.annotations.Prop
-import com.p69.elma.litho.DSL.ElmaLithoView
+import com.p69.elma.litho.ElmaLithoView
 import com.p69.elma.litho.DSL.widget
 
 
@@ -23,6 +23,7 @@ class ScreenWithTransitionSpec {
             val layout = when (screen) {
                 is ElmaLithoView.Widget -> Column.create(ctx).child(screen.builder)
                 is ElmaLithoView.Layout -> Column.create(ctx).child(screen.builder)
+                is ElmaLithoView.Section -> TODO()
             }
             return layout.transitionKey(screenKey).build()
         }
