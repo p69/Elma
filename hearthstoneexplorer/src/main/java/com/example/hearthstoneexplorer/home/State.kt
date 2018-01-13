@@ -9,7 +9,8 @@ import com.github.kittinunf.result.Result
 import com.p69.elma.core.CmdF
 import com.p69.elma.core.UpdateResult
 import io.michaelrocks.optional.Optional
-import kotlinx.coroutines.experimental.*
+import kotlinx.coroutines.experimental.CommonPool
+import kotlinx.coroutines.experimental.withContext
 
 
 object Home {
@@ -34,12 +35,11 @@ object Home {
     }
 
     private suspend fun searchByQuery(query: String): List<Card> = withContext(CommonPool) {
-        val (_, _, res) = Fuel.request(HearthstoneApi.search(query, locale = Locale.ruRU)).responseString()
+        val (_, _, res) = Fuel
+                .request(HearthstoneApi.search(query, locale = Locale.ruRU))
+                .responseString()
         return@withContext when (res) {
-            is Result.Success -> {
-                val cards = parseCards(res.value)
-                cards
-            }
+            is Result.Success -> parseCards(res.value)
             is Result.Failure -> throw res.error
         }
     }

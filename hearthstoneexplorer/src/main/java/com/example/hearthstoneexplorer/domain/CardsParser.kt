@@ -1,6 +1,7 @@
 package com.example.hearthstoneexplorer.domain
 
-import com.beust.klaxon.*
+import com.github.kittinunf.fuel.core.ResponseDeserializable
+import com.google.gson.*
 
 fun cardTypeFromJson(str: String?) = when (str) {
     CardType.Enchantment.description -> CardType.Enchantment
@@ -12,14 +13,6 @@ fun cardTypeFromJson(str: String?) = when (str) {
     else -> throw IllegalArgumentException("Unknown card type $str")
 }
 
-val cardTypeConverter = lazy<Converter<CardType>> {
-    object : Converter<CardType> {
-        override fun toJson(value: CardType): String? = """{"type" : "${value.description}""""
-
-        override fun fromJson(jv: JsonValue) = cardTypeFromJson(jv.string)
-    }
-}
-
 fun cardRarityFromJson(str: String?) = when (str) {
     CardRarity.Common.description -> CardRarity.Common
     CardRarity.Free.description -> CardRarity.Free
@@ -27,14 +20,6 @@ fun cardRarityFromJson(str: String?) = when (str) {
     CardRarity.Epic.description -> CardRarity.Epic
     CardRarity.Legendary.description -> CardRarity.Legendary
     else -> throw IllegalArgumentException("Unknown card rarity $str")
-}
-
-val cardRarityConverter = lazy<Converter<CardRarity>> {
-    object : Converter<CardRarity> {
-        override fun toJson(value: CardRarity): String? = """{"rarity" : "${value.description}""""
-
-        override fun fromJson(jv: JsonValue) = cardRarityFromJson(jv.string)
-    }
 }
 
 fun playerClassFromJson(str: String?) = when (str) {
@@ -53,27 +38,24 @@ fun playerClassFromJson(str: String?) = when (str) {
     else -> throw IllegalArgumentException("Unknown player class $str")
 }
 
-val playerClassConverter = lazy<Converter<PlayerClass>> {
-    object : Converter<PlayerClass> {
-        override fun toJson(value: PlayerClass): String? = """{"playerClass" : "${value.name}""""
-
-        override fun fromJson(jv: JsonValue) = playerClassFromJson(jv.string)
-    }
+class CardDeserializer : ResponseDeserializable<Array<Card>> {
+    override fun deserialize(content: String) = Gson().fromJson(content, Array<Card>::class.java)!!
 }
 
-val mechanicConverter = lazy<Converter<Mechanic>> {
-    object : Converter<Mechanic> {
-        override fun toJson(value: Mechanic): String? = """{"mechanic" : "${value.name}""""
-
-        override fun fromJson(jv: JsonValue) = Mechanic(jv.objString("name"))
-    }
+val cardGson = lazy<Gson> {
+    val cardTypeAdapter = JsonDeserializer<CardType> { json, _, _ -> cardTypeFromJson(json?.asString) }
+    val cardRarityAdapter = JsonDeserializer<CardRarity> { json, _, _ -> cardRarityFromJson(json?.asString) }
+    val playerClassAdapter = JsonDeserializer<PlayerClass> { json, _, _ -> playerClassFromJson(json?.asString) }
+    val mechanicsAdapter = JsonDeserializer<Mechanic> { json, _, _ -> Mechanic(json.asJsonObject?.get("name")?.asString ?: "") }
+    GsonBuilder()
+            .registerTypeAdapter(CardType::class.java, cardTypeAdapter)
+            .registerTypeAdapter(CardRarity::class.java, cardRarityAdapter)
+            .registerTypeAdapter(PlayerClass::class.java, playerClassAdapter)
+            .registerTypeAdapter(Mechanic::class.java, mechanicsAdapter)
+            .create()
 }
 
 fun parseCards(str: String): List<Card> {
-    val klaxon = Klaxon()
-            .converter(cardRarityConverter.value)
-            .converter(cardTypeConverter.value)
-            .converter(playerClassConverter.value)
-            .converter(mechanicConverter.value)
-    return klaxon.parseArray(str) ?: emptyList()
+    val cards = cardGson.value.fromJson(str, Array<Card>::class.java)
+    return cards.toList()
 }

@@ -38,7 +38,6 @@ object Search {
 }
 
 private suspend fun requestByQuery(query:String): Json.Response = withContext(CommonPool) {
-    delay(300) // to make sure that ripple animation is finished :D
     val (_,_,res) = Fuel.request(WeatherApi.currentFor(query)).responseObject(deserializer = Json.CurrentDeserializer())
     return@withContext when (res) {
         is Result.Success -> res.value
