@@ -19,6 +19,7 @@ class MainActivity : ElmaActivity<HomeModel, HomeMsg>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        supportActionBar?.hide()
         start()
     }
 
