@@ -6,6 +6,10 @@ import com.p69.elma.litho.ElmaLithoView;
 
 import java.util.List;
 
+/*
+Kotlin compiler breaks because of ListComponent.Builder (inner class with generics).
+Added this java-class wrapper to makeKotlin compiler happy
+ */
 public class ListWorkaround {
     private ComponentContext mComponentContext;
     private final ListComponent.Builder mBuilder;

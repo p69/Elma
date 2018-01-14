@@ -16,7 +16,8 @@ import kotlinx.coroutines.experimental.withContext
 object Home {
     fun update(msg:HomeMsg, model:HomeModel): UpdateResult<HomeModel, HomeMsg> {
         return when(msg) {
-            is HomeMsg.OnCardsLoaded -> UpdateResult(model.copy(isLoading = false, cards = msg.cards))
+            is HomeMsg.OnCardsLoaded ->
+                UpdateResult(model.copy(isLoading = false, cards = msg.cards.filter { it.img.isNotBlank() }))
             is HomeMsg.OnError -> UpdateResult(model.copy(isLoading = false,error = Optional.Some(msg.error)))
             is HomeMsg.OnTextQueryChanged -> {
                 if (model.isLoading) {
