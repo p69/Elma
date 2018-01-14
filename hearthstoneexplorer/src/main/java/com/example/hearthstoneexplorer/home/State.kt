@@ -16,8 +16,8 @@ import kotlinx.coroutines.experimental.withContext
 object Home {
     fun update(msg:HomeMsg, model:HomeModel): UpdateResult<HomeModel, HomeMsg> {
         return when(msg) {
-            is HomeMsg.OnCardsLoaded -> UpdateResult(model.copy(cards = msg.cards))
-            is HomeMsg.OnError -> UpdateResult(model.copy(error = Optional.Some(msg.error)))
+            is HomeMsg.OnCardsLoaded -> UpdateResult(model.copy(isLoading = false, cards = msg.cards))
+            is HomeMsg.OnError -> UpdateResult(model.copy(isLoading = false,error = Optional.Some(msg.error)))
             is HomeMsg.OnTextQueryChanged -> {
                 if (model.isLoading) {
                     UpdateResult(model)
@@ -36,7 +36,7 @@ object Home {
 
     private suspend fun searchByQuery(query: String): List<Card> = withContext(CommonPool) {
         val (_, _, res) = Fuel
-                .request(HearthstoneApi.search(query, locale = Locale.ruRU))
+                .request(HearthstoneApi.search(query, locale = Locale.enUS))
                 .responseString()
         return@withContext when (res) {
             is Result.Success -> parseCards(res.value)

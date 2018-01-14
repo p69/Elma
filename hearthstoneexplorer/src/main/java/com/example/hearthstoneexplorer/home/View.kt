@@ -6,7 +6,6 @@ import com.p69.elma.core.Dispatch
 import com.p69.elma.litho.DSL.*
 import com.p69.elma.litho.ElmaLithoView
 import io.michaelrocks.optional.Optional
-import kotlinx.coroutines.experimental.launch
 
 object HomeUI {
     fun view(model: HomeModel, c: ComponentContext, dispatcher: Dispatch<HomeMsg>): ElmaLithoView =
@@ -16,7 +15,7 @@ object HomeUI {
                 children(c) {
                     editText {
                         textSizeDip(16f)
-                        onTextChanged { t -> launch { dispatcher(HomeMsg.OnTextQueryChanged(t)) }}
+                        onTextChangedWithThrottling(1000) { t -> dispatcher(HomeMsg.OnTextQueryChanged(t)) }
                         heightDip(45f)
                     }
                     text {
