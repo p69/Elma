@@ -1,5 +1,6 @@
 package com.p69.elma.litho.DSL
 
+import android.support.v7.widget.OrientationHelper
 import com.facebook.litho.Column
 import com.facebook.litho.ComponentContext
 import com.facebook.litho.ComponentLayout
@@ -35,14 +36,55 @@ class ListComponentSpec {
 
 }
 
-fun Container.list(init: ListWorkaround.() -> Unit) {
-    val workaround = ListWorkaround(ctx)
+data class ListContainer(val c: ComponentContext, val recycler: Recycler.Builder, val binder: RecyclerBinder)
+
+fun Container.list(init: ListComponent.Builder.() -> Unit) {
+    val workaround = ListComponent.create(ctx) //ListWorkaround(ctx)
     workaround.init()
-    this.children.add(ElmaLithoView.Widget(workaround.builder))
+    this.children.add(ElmaLithoView.Widget(workaround))
 }
 
-fun ListWorkaround.items(init: Container.() -> Unit) {
-    val container = Container(this.componentContext)
+fun ListComponent.Builder.items(init: Container.() -> Unit) {
+    val container = Container(this.mContext)
     container.init()
     this.items(container.children)
+}
+
+fun Container.grid(
+        spanCount: Int,
+        orientation: Int = OrientationHelper.VERTICAL,
+        reverseLayout: Boolean = false,
+        rangeRatio: Float = 4f,
+        canPrefetchDisplayLists: Boolean = false,
+        canCacheDrawingDisplayLists: Boolean = false,
+        isCircular: Boolean = false,
+        init: ListContainer.()->Unit) {
+    val recyclerBuilder = Recycler.create(ctx)
+    val binder = RecyclerBinder.Builder()
+            .layoutInfo(GridLayoutInfo(ctx, spanCount, orientation, reverseLayout))
+            .rangeRatio(rangeRatio)
+            .canPrefetchDisplayLists(canPrefetchDisplayLists)
+            .canCacheDrawingDisplayLists(canCacheDrawingDisplayLists)
+            .isCircular(isCircular)
+            .build(ctx)
+    val list = ListContainer(ctx, recyclerBuilder, binder)
+    list.init()
+    recyclerBuilder.binder(binder)
+    children.add(ElmaLithoView.Widget(recyclerBuilder))
+}
+
+fun ListContainer.settings(init: Recycler.Builder.()->Unit) {
+    this.recycler.init()
+}
+
+fun ListContainer.items(init: Container.()->Unit) {
+    val container = Container(c)
+    container.init()
+    container.children.forEach { view ->
+        when (view) {
+            is ElmaLithoView.Widget -> binder.appendItem(view.builder.build())
+            is ElmaLithoView.Layout -> binder.appendItem(ElmaLayoutViewComponent.create(c).layout(view).build())
+            is ElmaLithoView.Section -> binder.appendItem(RecyclerCollectionComponent.create(c).disablePTR(true).section(view.builder).build())
+        }
+    }
 }

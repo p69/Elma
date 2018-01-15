@@ -36,8 +36,11 @@ object HomeUI {
                             heightDip(50f)
                         }
                     } else {
-                        list {
-                            flexGrow(1f)
+                        grid(2) {
+                            settings {
+                                flexGrow(1f)
+                                pullToRefresh(true)
+                            }
                             items {
                                 for (card in model.cards) {
                                     picassoImage {
