@@ -20,7 +20,7 @@ object Home {
                 UpdateResult(model.copy(isLoading = false, cards = msg.cards.filter { it.img.isNotBlank() }))
             is HomeMsg.OnError -> UpdateResult(model.copy(isLoading = false,error = Optional.Some(msg.error)))
             is HomeMsg.OnTextQueryChanged -> {
-                if (model.isLoading) {
+                if (model.isLoading || msg.text.isBlank()) {
                     UpdateResult(model)
                 } else {
                     val searchCmd = CmdF.ofAsyncFunc(
