@@ -1,6 +1,7 @@
 package com.example.hearthstoneexplorer.home
 
 import android.graphics.Color
+import com.example.hearthstoneexplorer.R
 import com.example.hearthstoneexplorer.widgets.picassoImage
 import com.facebook.litho.ComponentContext
 import com.p69.elma.core.Dispatch
@@ -41,6 +42,7 @@ object HomeUI {
                                 for (card in model.cards) {
                                     picassoImage {
                                         imageUrl(card.img)
+                                        placeholderImageRes(R.drawable.cardback_123)
                                     }
                                 }
                             }
