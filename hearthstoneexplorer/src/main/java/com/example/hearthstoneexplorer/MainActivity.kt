@@ -12,7 +12,7 @@ import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.channels.consumeEach
 import kotlinx.coroutines.experimental.launch
 
-class MainActivity : ElmaActivity<HomeModel, HomeMsg>() {
+class MainActivity : ElmaActivity() {
     companion object {
         val rootJob = Job() // simple solution to cancel all child coroutines when activity is destroyed
     }
@@ -20,7 +20,7 @@ class MainActivity : ElmaActivity<HomeModel, HomeMsg>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         supportActionBar?.hide()
-        start()
+        start(savedInstanceState)
     }
 
     override fun onDestroy() {
@@ -28,18 +28,19 @@ class MainActivity : ElmaActivity<HomeModel, HomeMsg>() {
         rootJob.cancel()
     }
 
-    private fun start() {
+    private fun start(savedInstanceState: Bundle?) {
         val componentContext = ComponentContext(this, StateHandler()) // Strange, but it crashes with NPE if StateHandler is not provided here
         mkProgramFromComponent(RootComponent(componentContext, this))
                 .withLitho(this, componentContext)
                 .withSubscription(this::subscription)
-                .run(context = UI + rootJob)
+                .runWith(savedInstanceState, context = UI + rootJob)
     }
 
     private fun subscription(model: HomeModel): Cmd<HomeMsg> {
         val sub: Sub<HomeMsg> = { dispatcher ->
             launch(parent = rootJob) {
-                lifeCycleChannel.consumeEach { handleLifeCycleEvent(it, model, dispatcher) }
+                lifeCycleChannel.consumeEach {
+                    handleLifeCycleEvent(it, model, dispatcher) }
             }
         }
         return CmdF.ofSub(sub)
@@ -47,7 +48,10 @@ class MainActivity : ElmaActivity<HomeModel, HomeMsg>() {
 
     private suspend fun handleLifeCycleEvent(event: LifeCycleEvent, model: HomeModel, dispatcher: Dispatch<HomeMsg>) {
         when(event) {
-            is LifeCycleEvent.BackPressed -> dispatcher(HomeMsg.Back)
+            LifeCycleEvent.BackPressed -> dispatcher(HomeMsg.Back)
+            is LifeCycleEvent.SaveInstanceState -> {
+                event.outState?.putParcelable(HomeModel.ParcelKey, model)
+            }
         }
     }
 }

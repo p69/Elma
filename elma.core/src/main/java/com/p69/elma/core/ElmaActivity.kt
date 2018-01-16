@@ -6,8 +6,8 @@ import android.os.Bundle
 import android.os.PersistableBundle
 import android.support.annotation.CallSuper
 import android.support.v7.app.AppCompatActivity
-import kotlinx.coroutines.experimental.channels.*
-import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.experimental.channels.BroadcastChannel
+import kotlinx.coroutines.experimental.channels.ConflatedBroadcastChannel
 
 sealed class LifeCycleEvent {
     data class Create(val savedInstanceState: Bundle?) : LifeCycleEvent()
@@ -34,158 +34,116 @@ sealed class LifeCycleEvent {
 }
 
 
-open class ElmaActivity<TModel, TMsg> (private val suppressDefaultBackPressed : Boolean = true) : AppCompatActivity() {
+open class ElmaActivity (private val suppressDefaultBackPressed : Boolean = true) : AppCompatActivity() {
     private val lifeCycleBroadcast = ConflatedBroadcastChannel<LifeCycleEvent>()
     val lifeCycleChannel: BroadcastChannel<LifeCycleEvent> = lifeCycleBroadcast
 
     @CallSuper override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        launch {
-            lifeCycleBroadcast.send(LifeCycleEvent.Create(savedInstanceState))
-        }
+        lifeCycleBroadcast.offer(LifeCycleEvent.Create(savedInstanceState))
     }
 
     @CallSuper override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
         super.onCreate(savedInstanceState, persistentState)
-        launch {
-            lifeCycleBroadcast.send(LifeCycleEvent.CreatePersistent(savedInstanceState, persistentState))
-        }
+        lifeCycleBroadcast.offer(LifeCycleEvent.CreatePersistent(savedInstanceState, persistentState))
     }
 
     @CallSuper override fun onStart() {
         super.onStart()
-        launch {
-            lifeCycleBroadcast.send(LifeCycleEvent.Start)
-        }
+        lifeCycleBroadcast.offer(LifeCycleEvent.Start)
     }
 
     @CallSuper override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
-        launch {
-            lifeCycleBroadcast.send(LifeCycleEvent.PostCreate(savedInstanceState))
-        }
+        lifeCycleBroadcast.offer(LifeCycleEvent.PostCreate(savedInstanceState))
     }
 
     @CallSuper override fun onPostCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
         super.onPostCreate(savedInstanceState, persistentState)
-        launch {
-            lifeCycleBroadcast.send(LifeCycleEvent.PostCreatePersistent(savedInstanceState, persistentState))
-        }
+        lifeCycleBroadcast.offer(LifeCycleEvent.PostCreatePersistent(savedInstanceState, persistentState))
     }
 
     @CallSuper override fun onResume() {
         super.onResume()
-        launch {
-            lifeCycleBroadcast.send(LifeCycleEvent.Resume)
-        }
+        lifeCycleBroadcast.offer(LifeCycleEvent.Resume)
     }
 
     @CallSuper override fun onPause() {
-        launch {
-            lifeCycleBroadcast.send(LifeCycleEvent.Pause)
-        }
+        lifeCycleBroadcast.offer(LifeCycleEvent.Pause)
         super.onPause()
     }
 
     @CallSuper override fun onStop() {
-        launch {
-            lifeCycleBroadcast.send(LifeCycleEvent.Stop)
-        }
+        lifeCycleBroadcast.offer(LifeCycleEvent.Stop)
         super.onStop()
     }
 
     @CallSuper override fun onDestroy() {
-        launch {
-            lifeCycleBroadcast.send(LifeCycleEvent.Destroy)
-            lifeCycleBroadcast.close()
-        }
+        lifeCycleBroadcast.offer(LifeCycleEvent.Destroy)
+        lifeCycleBroadcast.close()
         super.onDestroy()
     }
 
     @CallSuper override fun onRestart() {
         super.onRestart()
-        launch {
-            lifeCycleBroadcast.send(LifeCycleEvent.Restart)
-        }
+        lifeCycleBroadcast.offer(LifeCycleEvent.Restart)
     }
 
     @CallSuper override fun onSaveInstanceState(outState: Bundle?) {
         super.onSaveInstanceState(outState)
-        launch {
-            lifeCycleBroadcast.send(LifeCycleEvent.SaveInstanceState(outState))
-        }
+        lifeCycleBroadcast.offer(LifeCycleEvent.SaveInstanceState(outState))
     }
 
     @CallSuper override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
         super.onSaveInstanceState(outState, outPersistentState)
-        launch {
-            lifeCycleBroadcast.send(LifeCycleEvent.SaveInstanceStatePersistent(outState, outPersistentState))
-        }
+        lifeCycleBroadcast.offer(LifeCycleEvent.SaveInstanceStatePersistent(outState, outPersistentState))
     }
 
     @CallSuper override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
-        launch {
-            lifeCycleBroadcast.send(LifeCycleEvent.RestoreInstanceState(savedInstanceState))
-        }
+        lifeCycleBroadcast.offer(LifeCycleEvent.RestoreInstanceState(savedInstanceState))
     }
 
     @CallSuper override fun onRestoreInstanceState(savedInstanceState: Bundle, persistentState: PersistableBundle) {
         super.onRestoreInstanceState(savedInstanceState, persistentState)
-        launch {
-            lifeCycleBroadcast.send(LifeCycleEvent.RestoreInstanceStatePersistent(savedInstanceState, persistentState))
-        }
+        lifeCycleBroadcast.offer(LifeCycleEvent.RestoreInstanceStatePersistent(savedInstanceState, persistentState))
     }
 
     @CallSuper override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
-        launch {
-            lifeCycleBroadcast.send(LifeCycleEvent.NewIntent(intent))
-        }
+        lifeCycleBroadcast.offer(LifeCycleEvent.NewIntent(intent))
     }
 
     @CallSuper override fun onBackPressed() {
         if (!suppressDefaultBackPressed) {
             super.onBackPressed()
         }
-        launch {
-            lifeCycleBroadcast.send(LifeCycleEvent.BackPressed)
-        }
+        lifeCycleBroadcast.offer(LifeCycleEvent.BackPressed)
     }
 
     @CallSuper override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-        launch {
-            lifeCycleBroadcast.send(LifeCycleEvent.AttachedToWindow)
-        }
+        lifeCycleBroadcast.offer(LifeCycleEvent.AttachedToWindow)
     }
 
     @CallSuper override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
-        launch {
-            lifeCycleBroadcast.send(LifeCycleEvent.DetachedFromWindow)
-        }
+        lifeCycleBroadcast.offer(LifeCycleEvent.DetachedFromWindow)
     }
 
     @CallSuper override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
-        launch {
-            lifeCycleBroadcast.send(LifeCycleEvent.ConfigurationChanged(newConfig))
-        }
+        lifeCycleBroadcast.offer(LifeCycleEvent.ConfigurationChanged(newConfig))
     }
 
     @CallSuper override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
         super.onActivityResult(requestCode, resultCode, data)
-        launch {
-            lifeCycleBroadcast.send(LifeCycleEvent.ActivityResult(requestCode, resultCode, data))
-        }
+        lifeCycleBroadcast.offer(LifeCycleEvent.ActivityResult(requestCode, resultCode, data))
     }
 
     @CallSuper override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>,
                                                        grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        launch {
-            lifeCycleBroadcast.send(LifeCycleEvent.RequestPermissionsResult(requestCode, permissions, grantResults))
-        }
+        lifeCycleBroadcast.offer(LifeCycleEvent.RequestPermissionsResult(requestCode, permissions, grantResults))
     }
 }

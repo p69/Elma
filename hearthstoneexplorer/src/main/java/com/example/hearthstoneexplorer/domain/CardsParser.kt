@@ -1,9 +1,10 @@
 package com.example.hearthstoneexplorer.domain
 
-import com.github.kittinunf.fuel.core.ResponseDeserializable
-import com.google.gson.*
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
+import com.google.gson.JsonDeserializer
 
-fun cardTypeFromJson(str: String?) = when (str) {
+fun cardTypeFromString(str: String?) = when (str) {
     CardType.Enchantment.description -> CardType.Enchantment
     CardType.Hero.description -> CardType.Hero
     CardType.HeroPower.description -> CardType.HeroPower
@@ -13,7 +14,7 @@ fun cardTypeFromJson(str: String?) = when (str) {
     else -> throw IllegalArgumentException("Unknown card type $str")
 }
 
-fun cardRarityFromJson(str: String?) = when (str) {
+fun cardRarityFromString(str: String?) = when (str) {
     CardRarity.Common.description -> CardRarity.Common
     CardRarity.Free.description -> CardRarity.Free
     CardRarity.Rare.description -> CardRarity.Rare
@@ -22,7 +23,7 @@ fun cardRarityFromJson(str: String?) = when (str) {
     else -> throw IllegalArgumentException("Unknown card rarity $str")
 }
 
-fun playerClassFromJson(str: String?) = when (str) {
+fun playerClassFromString(str: String?) = when (str) {
     PlayerClass.DeathKnight.name -> PlayerClass.DeathKnight
     PlayerClass.Dream.name -> PlayerClass.Dream
     PlayerClass.Neutral.name -> PlayerClass.Neutral
@@ -38,14 +39,10 @@ fun playerClassFromJson(str: String?) = when (str) {
     else -> throw IllegalArgumentException("Unknown player class $str")
 }
 
-class CardDeserializer : ResponseDeserializable<Array<Card>> {
-    override fun deserialize(content: String) = Gson().fromJson(content, Array<Card>::class.java)!!
-}
-
 val cardGson = lazy<Gson> {
-    val cardTypeAdapter = JsonDeserializer<CardType> { json, _, _ -> cardTypeFromJson(json?.asString) }
-    val cardRarityAdapter = JsonDeserializer<CardRarity> { json, _, _ -> cardRarityFromJson(json?.asString) }
-    val playerClassAdapter = JsonDeserializer<PlayerClass> { json, _, _ -> playerClassFromJson(json?.asString) }
+    val cardTypeAdapter = JsonDeserializer<CardType> { json, _, _ -> cardTypeFromString(json?.asString) }
+    val cardRarityAdapter = JsonDeserializer<CardRarity> { json, _, _ -> cardRarityFromString(json?.asString) }
+    val playerClassAdapter = JsonDeserializer<PlayerClass> { json, _, _ -> playerClassFromString(json?.asString) }
     val mechanicsAdapter = JsonDeserializer<Mechanic> { json, _, _ -> Mechanic(json.asJsonObject?.get("name")?.asString ?: "") }
     GsonBuilder()
             .registerTypeAdapter(CardType::class.java, cardTypeAdapter)

@@ -8,26 +8,25 @@ import com.github.kittinunf.fuel.Fuel
 import com.github.kittinunf.result.Result
 import com.p69.elma.core.CmdF
 import com.p69.elma.core.UpdateResult
-import io.michaelrocks.optional.Optional
 import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.withContext
 
 
 object Home {
-    fun update(msg:HomeMsg, model:HomeModel): UpdateResult<HomeModel, HomeMsg> {
-        return when(msg) {
+    fun update(msg: HomeMsg, model: HomeModel): UpdateResult<HomeModel, HomeMsg> {
+        return when (msg) {
             is HomeMsg.OnCardsLoaded ->
                 UpdateResult(model.copy(isLoading = false, cards = msg.cards.filter { it.img.isNotBlank() }))
-            is HomeMsg.OnError -> UpdateResult(model.copy(isLoading = false,error = Optional.Some(msg.error)))
+            is HomeMsg.OnError -> UpdateResult(model.copy(isLoading = false, error = msg.error))
             is HomeMsg.OnTextQueryChanged -> {
-                if (model.isLoading || msg.text.isBlank()) {
+                if (model.isLoading || msg.text.isBlank() || msg.text == model.searchQuery) {
                     UpdateResult(model)
                 } else {
                     val searchCmd = CmdF.ofAsyncFunc(
                             { q -> searchByQuery(q) },
                             msg.text,
                             HomeMsg::OnCardsLoaded,
-                            HomeMsg::OnError)
+                            { exc -> HomeMsg.OnError(exc.message ?: "Unknown error") })
                     UpdateResult(model.copy(isLoading = true), searchCmd)
                 }
             }

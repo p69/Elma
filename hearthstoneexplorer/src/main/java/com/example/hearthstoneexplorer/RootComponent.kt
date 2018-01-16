@@ -1,5 +1,6 @@
 package com.example.hearthstoneexplorer
 
+import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import com.example.hearthstoneexplorer.home.Home
 import com.example.hearthstoneexplorer.home.HomeModel
@@ -12,9 +13,9 @@ import com.p69.elma.core.UpdateResult
 import com.p69.elma.litho.ElmaLithoView
 
 
-class RootComponent(private val context: ComponentContext, private val activity: AppCompatActivity) : ElmaComponent<Unit, HomeModel, HomeMsg, ElmaLithoView> {
-    override fun init(args: Unit): UpdateResult<HomeModel, HomeMsg> {
-        val model = HomeModel(cards = emptyList())
+class RootComponent(private val context: ComponentContext, private val activity: AppCompatActivity) : ElmaComponent<Bundle?, HomeModel, HomeMsg, ElmaLithoView> {
+    override fun init(args: Bundle?): UpdateResult<HomeModel, HomeMsg> {
+        val model = args?.getParcelable(HomeModel.ParcelKey) ?: HomeModel()
         return UpdateResult(model)
     }
 
