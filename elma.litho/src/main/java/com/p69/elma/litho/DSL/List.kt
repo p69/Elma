@@ -7,7 +7,6 @@ import com.facebook.litho.ComponentLayout
 import com.facebook.litho.annotations.LayoutSpec
 import com.facebook.litho.annotations.OnCreateLayout
 import com.facebook.litho.annotations.Prop
-import com.facebook.litho.sections.widget.RecyclerCollectionComponent
 import com.facebook.litho.widget.GridLayoutInfo
 import com.facebook.litho.widget.Recycler
 import com.facebook.litho.widget.RecyclerBinder
@@ -27,7 +26,6 @@ class ListComponentSpec {
                 when (view) {
                     is ElmaLithoView.Widget -> recyclerBinder.appendItem(view.builder.build())
                     is ElmaLithoView.Layout -> recyclerBinder.appendItem(ElmaLayoutViewComponent.create(c).layout(view).build())
-                    is ElmaLithoView.Section -> recyclerBinder.appendItem(RecyclerCollectionComponent.create(c).disablePTR(true).section(view.builder).build())
                 }
             }
             return builder.child(Recycler.create(c).binder(recyclerBinder).pullToRefresh(false)).build()
@@ -84,7 +82,6 @@ fun ListContainer.items(init: Container.()->Unit) {
         when (view) {
             is ElmaLithoView.Widget -> binder.appendItem(view.builder.build())
             is ElmaLithoView.Layout -> binder.appendItem(ElmaLayoutViewComponent.create(c).layout(view).build())
-            is ElmaLithoView.Section -> binder.appendItem(RecyclerCollectionComponent.create(c).disablePTR(true).section(view.builder).build())
         }
     }
 }

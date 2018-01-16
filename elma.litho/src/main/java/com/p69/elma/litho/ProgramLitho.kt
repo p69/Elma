@@ -11,15 +11,13 @@ fun <TArg, TModel, TMsg> (Program<TArg, TModel, TMsg, ElmaLithoView>).withLitho(
         : Program<TArg, TModel, TMsg, ElmaLithoView> {
 
     val uiComponent = SimpleElmaViewComponent.create(context).viewCreator(ElmaViewCreator.None)
-    //val elmaSection = ElmaViewSection.create(SectionContext(context)).viewCreator(ElmaViewCreator.None)
-    val rootView = LithoView.create(context, uiComponent.build()) //RecyclerCollectionComponent.create(context).section(elmaSection).build())
+    val rootView = LithoView.create(context, uiComponent.build())
     activity.setContentView(rootView)
 
     return this.copy(
             setState = { m, d ->
                 val newState = ElmaViewCreator.Some { this.view(m, d) }
                 val newUiComponent = SimpleElmaViewComponent.create(context).viewCreator(newState)
-                //val updatedSection = ElmaViewSection.create(SectionContext(context)).viewCreator(newState)
-                rootView.setComponent(newUiComponent.build()) //RecyclerCollectionComponent.create(context).section(updatedSection).build())
+                rootView.setComponent(newUiComponent.build())
             })
 }

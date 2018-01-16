@@ -23,7 +23,6 @@ class ScreenWithTransitionSpec {
             val layout = when (screen) {
                 is ElmaLithoView.Widget -> Column.create(ctx).child(screen.builder)
                 is ElmaLithoView.Layout -> Column.create(ctx).child(screen.builder)
-                is ElmaLithoView.Section -> TODO()
             }
             return layout.transitionKey(screenKey).build()
         }

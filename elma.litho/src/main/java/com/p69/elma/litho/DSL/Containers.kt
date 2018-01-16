@@ -29,7 +29,6 @@ fun ComponentLayout.ContainerBuilder.children(ctx: ComponentContext, init: Conta
         when (child) {
             is ElmaLithoView.Widget -> this.child(child.builder)
             is ElmaLithoView.Layout -> this.child(child.builder)
-            is ElmaLithoView.Section -> this.child(com.facebook.litho.sections.widget.RecyclerCollectionComponent.create(ctx).section(child.builder))
         }
     }
 }
