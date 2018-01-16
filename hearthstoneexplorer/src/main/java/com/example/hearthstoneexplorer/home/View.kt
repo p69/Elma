@@ -39,7 +39,7 @@ object HomeUI {
                         grid(2) {
                             settings {
                                 flexGrow(1f)
-                                pullToRefresh(true)
+                                backgroundColor(Color.GRAY)
                             }
                             items {
                                 for (card in model.cards) {
