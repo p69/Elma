@@ -10,14 +10,14 @@ import com.p69.elma.core.Program
 fun <TArg, TModel, TMsg> (Program<TArg, TModel, TMsg, ElmaLithoView>).withLitho(activity: SupportActivity, context: ComponentContext)
         : Program<TArg, TModel, TMsg, ElmaLithoView> {
 
-    val uiComponent = SimpleElmaViewComponent.create(context).viewCreator(ElmaViewCreator.None)
+    val uiComponent = ElmaViewComponent.create(context).viewCreator(ElmaViewCreator.None)
     val rootView = LithoView.create(context, uiComponent.build())
     activity.setContentView(rootView)
 
     return this.copy(
             setState = { m, d ->
                 val newState = ElmaViewCreator.Some { this.view(m, d) }
-                val newUiComponent = SimpleElmaViewComponent.create(context).viewCreator(newState)
+                val newUiComponent = ElmaViewComponent.create(context).viewCreator(newState)
                 rootView.setComponent(newUiComponent.build())
             })
 }

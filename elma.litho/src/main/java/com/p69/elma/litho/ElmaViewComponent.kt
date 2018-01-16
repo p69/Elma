@@ -24,7 +24,9 @@ class ElmaLayoutViewComponentSpec {
     }
 
 }
-class SimpleElmaViewComponentSpec {
+
+@LayoutSpec
+class ElmaViewComponentSpec {
 
     companion object {
         @JvmStatic
