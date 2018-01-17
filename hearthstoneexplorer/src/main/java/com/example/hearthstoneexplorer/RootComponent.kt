@@ -14,19 +14,27 @@ import com.p69.elma.litho.ElmaLithoView
 
 
 class RootComponent(private val context: ComponentContext, private val activity: AppCompatActivity) : ElmaComponent<Bundle?, HomeModel, HomeMsg, ElmaLithoView> {
+
+    private val bundleKey = "model"
+
     override fun init(args: Bundle?): UpdateResult<HomeModel, HomeMsg> {
-        val model = args?.getParcelable(HomeModel.ParcelKey) ?: HomeModel()
+        val fromParcel = args?.getParcelable<HomeModel>(bundleKey)
+        val model = fromParcel ?: HomeModel()
         return UpdateResult(model)
     }
 
     override fun update(msg: HomeMsg, model: HomeModel): UpdateResult<HomeModel, HomeMsg> {
         return when(msg) {
-            is HomeMsg.Exit -> {
+            HomeMsg.Exit -> {
                 activity.finish()
                 UpdateResult(model)
             }
-            is HomeMsg.HideVirtualKeyboard -> {
+            HomeMsg.HideVirtualKeyboard -> {
                 activity.hideVirtualKeyboard()
+                UpdateResult(model)
+            }
+            is HomeMsg.SaveInstanceState -> {
+                msg.outState?.putParcelable(bundleKey, model)
                 UpdateResult(model)
             }
             else -> Home.update(msg, model)

@@ -27,7 +27,7 @@ object Home {
                             msg.text,
                             HomeMsg::OnCardsLoaded,
                             { exc -> HomeMsg.OnError(exc.message ?: "Unknown error") })
-                    UpdateResult(model.copy(isLoading = true), searchCmd)
+                    UpdateResult(model.copy(isLoading = true, searchQuery = msg.text), searchCmd)
                 }
             }
             else -> UpdateResult(model)

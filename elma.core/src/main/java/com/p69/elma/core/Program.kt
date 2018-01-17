@@ -109,6 +109,7 @@ fun <TArg, TModel, TMsg, TView> (Program<TArg, TModel, TMsg, TView>).runWith(
     val loop = actor<TMsg>(context = context, capacity = mailBoxCapacity) {
         for (msg in channel) {
             try {
+                Log.i("Elma program", "isActive=$isActive handle message $msg")
                 if (isActive) {
                     val (updatedModel, effects) = program.update(msg, currentModel)
                     currentModel = updatedModel

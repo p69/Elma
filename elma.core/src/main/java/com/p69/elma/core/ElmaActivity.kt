@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.os.PersistableBundle
 import android.support.annotation.CallSuper
 import android.support.v7.app.AppCompatActivity
+import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.channels.BroadcastChannel
 import kotlinx.coroutines.experimental.channels.ConflatedBroadcastChannel
 
@@ -35,37 +36,38 @@ sealed class LifeCycleEvent {
 
 
 open class ElmaActivity (private val suppressDefaultBackPressed : Boolean = true) : AppCompatActivity() {
+    val rootJob = Job() // simple solution to cancel all child coroutines when activity is destroyed
     private val lifeCycleBroadcast = ConflatedBroadcastChannel<LifeCycleEvent>()
     val lifeCycleChannel: BroadcastChannel<LifeCycleEvent> = lifeCycleBroadcast
 
     @CallSuper override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
         lifeCycleBroadcast.offer(LifeCycleEvent.Create(savedInstanceState))
+        super.onCreate(savedInstanceState)
     }
 
     @CallSuper override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
-        super.onCreate(savedInstanceState, persistentState)
         lifeCycleBroadcast.offer(LifeCycleEvent.CreatePersistent(savedInstanceState, persistentState))
+        super.onCreate(savedInstanceState, persistentState)
     }
 
     @CallSuper override fun onStart() {
-        super.onStart()
         lifeCycleBroadcast.offer(LifeCycleEvent.Start)
+        super.onStart()
     }
 
     @CallSuper override fun onPostCreate(savedInstanceState: Bundle?) {
-        super.onPostCreate(savedInstanceState)
         lifeCycleBroadcast.offer(LifeCycleEvent.PostCreate(savedInstanceState))
+        super.onPostCreate(savedInstanceState)
     }
 
     @CallSuper override fun onPostCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
-        super.onPostCreate(savedInstanceState, persistentState)
         lifeCycleBroadcast.offer(LifeCycleEvent.PostCreatePersistent(savedInstanceState, persistentState))
+        super.onPostCreate(savedInstanceState, persistentState)
     }
 
     @CallSuper override fun onResume() {
-        super.onResume()
         lifeCycleBroadcast.offer(LifeCycleEvent.Resume)
+        super.onResume()
     }
 
     @CallSuper override fun onPause() {
@@ -80,70 +82,71 @@ open class ElmaActivity (private val suppressDefaultBackPressed : Boolean = true
 
     @CallSuper override fun onDestroy() {
         lifeCycleBroadcast.offer(LifeCycleEvent.Destroy)
-        lifeCycleBroadcast.close()
         super.onDestroy()
     }
 
     @CallSuper override fun onRestart() {
-        super.onRestart()
         lifeCycleBroadcast.offer(LifeCycleEvent.Restart)
+        super.onRestart()
     }
 
     @CallSuper override fun onSaveInstanceState(outState: Bundle?) {
-        super.onSaveInstanceState(outState)
         lifeCycleBroadcast.offer(LifeCycleEvent.SaveInstanceState(outState))
+        super.onSaveInstanceState(outState)
     }
 
     @CallSuper override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
-        super.onSaveInstanceState(outState, outPersistentState)
         lifeCycleBroadcast.offer(LifeCycleEvent.SaveInstanceStatePersistent(outState, outPersistentState))
+        super.onSaveInstanceState(outState, outPersistentState)
     }
 
     @CallSuper override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-        super.onRestoreInstanceState(savedInstanceState)
         lifeCycleBroadcast.offer(LifeCycleEvent.RestoreInstanceState(savedInstanceState))
+        super.onRestoreInstanceState(savedInstanceState)
     }
 
     @CallSuper override fun onRestoreInstanceState(savedInstanceState: Bundle, persistentState: PersistableBundle) {
-        super.onRestoreInstanceState(savedInstanceState, persistentState)
         lifeCycleBroadcast.offer(LifeCycleEvent.RestoreInstanceStatePersistent(savedInstanceState, persistentState))
+        super.onRestoreInstanceState(savedInstanceState, persistentState)
     }
 
     @CallSuper override fun onNewIntent(intent: Intent) {
-        super.onNewIntent(intent)
         lifeCycleBroadcast.offer(LifeCycleEvent.NewIntent(intent))
+        super.onNewIntent(intent)
     }
 
     @CallSuper override fun onBackPressed() {
+        lifeCycleBroadcast.offer(LifeCycleEvent.BackPressed)
         if (!suppressDefaultBackPressed) {
             super.onBackPressed()
         }
-        lifeCycleBroadcast.offer(LifeCycleEvent.BackPressed)
     }
 
     @CallSuper override fun onAttachedToWindow() {
-        super.onAttachedToWindow()
         lifeCycleBroadcast.offer(LifeCycleEvent.AttachedToWindow)
+        super.onAttachedToWindow()
     }
 
     @CallSuper override fun onDetachedFromWindow() {
-        super.onDetachedFromWindow()
         lifeCycleBroadcast.offer(LifeCycleEvent.DetachedFromWindow)
+        super.onDetachedFromWindow()
+        lifeCycleBroadcast.close()
+        rootJob.cancel()
     }
 
     @CallSuper override fun onConfigurationChanged(newConfig: Configuration) {
-        super.onConfigurationChanged(newConfig)
         lifeCycleBroadcast.offer(LifeCycleEvent.ConfigurationChanged(newConfig))
+        super.onConfigurationChanged(newConfig)
     }
 
     @CallSuper override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
-        super.onActivityResult(requestCode, resultCode, data)
         lifeCycleBroadcast.offer(LifeCycleEvent.ActivityResult(requestCode, resultCode, data))
+        super.onActivityResult(requestCode, resultCode, data)
     }
 
     @CallSuper override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>,
                                                        grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         lifeCycleBroadcast.offer(LifeCycleEvent.RequestPermissionsResult(requestCode, permissions, grantResults))
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 }

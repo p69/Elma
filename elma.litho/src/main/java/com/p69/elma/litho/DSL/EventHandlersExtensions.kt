@@ -86,7 +86,7 @@ fun (EditText.Builder).onTextChangedWithThrottling(wait: Long = 300, handler: (S
     }
     val dispatcher = createEventDispatcher<TextChangedEvent> { evt ->
         val txt = evt.text
-        if (!txt.isNullOrEmpty()) {
+        if (!channel.isClosedForReceive && !txt.isNullOrEmpty()) {
             channel.offer(txt)
         }
     }

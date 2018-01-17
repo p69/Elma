@@ -1,5 +1,6 @@
 package com.example.hearthstoneexplorer.home
 
+import android.os.Bundle
 import android.os.Parcel
 import com.example.hearthstoneexplorer.KParcelable
 import com.example.hearthstoneexplorer.domain.Card
@@ -26,13 +27,13 @@ data class HomeModel(
 
     companion object {
         @JvmField val CREATOR = parcelableCreator(::HomeModel)
-        val ParcelKey = "home_model"
     }
 }
 
 sealed class HomeMsg {
     object Back : HomeMsg()
     object Exit : HomeMsg()
+    data class SaveInstanceState(var outState: Bundle?) : HomeMsg()
     object HideVirtualKeyboard : HomeMsg()
 
     data class OnTextQueryChanged(val text: String) : HomeMsg()
