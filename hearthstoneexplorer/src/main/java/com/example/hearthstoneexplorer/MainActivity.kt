@@ -7,10 +7,10 @@ import com.facebook.litho.ComponentContext
 import com.facebook.litho.StateHandler
 import com.p69.elma.core.*
 import com.p69.elma.litho.withLitho
-import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.channels.consumeEach
 import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.experimental.newSingleThreadContext
 
 class MainActivity : ElmaActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -21,10 +21,11 @@ class MainActivity : ElmaActivity() {
 
     private fun start(savedInstanceState: Bundle?) {
         val componentContext = ComponentContext(this, StateHandler()) // Strange, but it crashes with NPE if StateHandler is not provided here
+        val programContext = newSingleThreadContext("elma context") // Create new thread for main loop and dispatch all messages through it
         mkProgramFromComponent(RootComponent(componentContext, this))
                 .withLitho(this, componentContext, UI + rootJob)
                 .withSubscription(this::subscription)
-                .runWith(savedInstanceState, context = CommonPool + rootJob)
+                .runWith(savedInstanceState, context = programContext + rootJob)
     }
 
     private fun subscription(model: HomeModel): Cmd<HomeMsg> {
