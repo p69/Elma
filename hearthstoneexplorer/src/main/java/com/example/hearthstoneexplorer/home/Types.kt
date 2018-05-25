@@ -5,6 +5,7 @@ import android.os.Parcel
 import com.example.hearthstoneexplorer.KParcelable
 import com.example.hearthstoneexplorer.domain.Card
 import com.example.hearthstoneexplorer.parcelableCreator
+import com.facebook.litho.widget.RecyclerBinder
 
 data class HomeModel(
         val cards: List<Card> = emptyList(),

@@ -1,5 +1,6 @@
 package com.p69.elma.litho
 
+import com.facebook.litho.Component
 import com.facebook.litho.ComponentContext
 import com.facebook.litho.ComponentLayout
 import com.facebook.litho.annotations.LayoutSpec
@@ -18,7 +19,7 @@ class ElmaLayoutViewComponentSpec {
     companion object {
         @JvmStatic
         @OnCreateLayout
-        fun onCreateLayout(c: ComponentContext, @Prop layout: ElmaLithoView.Layout): ComponentLayout {
+        fun onCreateLayout(c: ComponentContext, @Prop layout: ElmaLithoView.Layout): Component {
             return layout.builder.build()
         }
     }
@@ -31,16 +32,16 @@ class ElmaViewComponentSpec {
     companion object {
         @JvmStatic
         @OnCreateLayout
-        fun onCreateLayout(c: ComponentContext, @Prop viewCreator: ElmaViewCreator): ComponentLayout {
+        fun onCreateLayout(c: ComponentContext, @Prop viewCreator: ElmaViewCreator): Component {
             return when(viewCreator) {
                 is ElmaViewCreator.Some -> {
                     val view = viewCreator.createView()
                     when (view) {
-                        is ElmaLithoView.Widget -> view.builder.buildWithLayout()
+                        is ElmaLithoView.Widget -> view.builder.build()
                         is ElmaLithoView.Layout -> view.builder.build()
                     }
                 }
-                is ElmaViewCreator.None -> Text.create(c).text("None").buildWithLayout()
+                is ElmaViewCreator.None -> Text.create(c).text("None").build()
             }
         }
     }

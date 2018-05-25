@@ -8,74 +8,74 @@ import kotlinx.coroutines.experimental.channels.Channel
 import kotlinx.coroutines.experimental.channels.consumeEach
 import kotlinx.coroutines.experimental.launch
 
-fun <C : Component<out Component<*>>, B : Component.Builder<C, B>> (Component.Builder<C, B>).onClick(handler: (ClickEvent) -> Unit): Component.Builder<*, *> {
+fun <B : Component.Builder<B>> (Component.Builder<B>).onClick(handler: (ClickEvent) -> Unit): Component.Builder<*> {
     val dispatcher = createEventDispatcher(handler)
-    this.clickHandler(EventHandler(dispatcher, "elma click handler", 1, null))
+    this.clickHandler(EventHandler(dispatcher, 1, null))
     return this
 }
 
-fun <C : Component<out Component<*>>, B : Component.Builder<C, B>> (Component.Builder<C, B>).onLongClick(handler: (LongClickEvent) -> Unit): Component.Builder<*, *> {
+fun <B : Component.Builder<B>> (Component.Builder<B>).onLongClick(handler: (LongClickEvent) -> Unit): Component.Builder<*> {
     val dispatcher = createEventDispatcher(handler)
-    this.longClickHandler(EventHandler(dispatcher, "elma long click handler", 1, null))
+    this.longClickHandler(EventHandler(dispatcher, 1, null))
     return this
 }
 
-fun <C : Component<out Component<*>>, B : Component.Builder<C, B>> (Component.Builder<C, B>).onFocusChange(handler: (FocusChangedEvent) -> Unit): Component.Builder<*, *> {
+fun <B : Component.Builder<B>> (Component.Builder<B>).onFocusChange(handler: (FocusChangedEvent) -> Unit): Component.Builder<*> {
     val dispatcher = createEventDispatcher(handler)
-    this.focusChangeHandler(EventHandler(dispatcher, "elma focus changed handler", 1, null))
+    this.focusChangeHandler(EventHandler(dispatcher, 1, null))
     return this
 }
 
-fun <C : Component<out Component<*>>, B : Component.Builder<C, B>> (Component.Builder<C, B>).onTouch(handler: (TouchEvent) -> Unit): Component.Builder<*, *> {
+fun <B : Component.Builder<B>> (Component.Builder<B>).onTouch(handler: (TouchEvent) -> Unit): Component.Builder<*> {
     val dispatcher = createEventDispatcher(handler)
-    this.touchHandler(EventHandler(dispatcher, "elma touch handler", 1, null))
+    this.touchHandler(EventHandler(dispatcher, 1, null))
     return this
 }
 
-fun <C : Component<out Component<*>>, B : Component.Builder<C, B>> (Component.Builder<C, B>).onInterceptTouch(handler: (InterceptTouchEvent) -> Unit): Component.Builder<*, *> {
+fun <B : Component.Builder<B>> (Component.Builder<B>).onInterceptTouch(handler: (InterceptTouchEvent) -> Unit): Component.Builder<*> {
     val dispatcher = createEventDispatcher(handler)
-    this.interceptTouchHandler(EventHandler(dispatcher, "elma intercept touch handler", 1, null))
+    this.interceptTouchHandler(EventHandler(dispatcher, 1, null))
     return this
 }
 
-fun <C : Component<out Component<*>>, B : Component.Builder<C, B>> (Component.Builder<C, B>).onVisible(handler: (VisibleEvent) -> Unit): Component.Builder<*, *> {
+fun <B : Component.Builder<B>> (Component.Builder<B>).onVisible(handler: (VisibleEvent) -> Unit): Component.Builder<*> {
     val dispatcher = createEventDispatcher(handler)
-    this.visibleHandler(EventHandler(dispatcher, "elma visible handler", 1, null))
+    this.visibleHandler(EventHandler(dispatcher, 1, null))
     return this
 }
 
-fun <C : Component<out Component<*>>, B : Component.Builder<C, B>> (Component.Builder<C, B>).onInvisible(handler: (InvisibleEvent) -> Unit): Component.Builder<*, *> {
+fun <B : Component.Builder<B>> (Component.Builder<B>).onInvisible(handler: (InvisibleEvent) -> Unit): Component.Builder<*> {
     val dispatcher = createEventDispatcher(handler)
-    this.invisibleHandler(EventHandler(dispatcher, "elma invisible handler", 1, null))
+    this.invisibleHandler(EventHandler(dispatcher, 1, null))
     return this
 }
 
-fun <C : Component<out Component<*>>, B : Component.Builder<C, B>> (Component.Builder<C, B>).onFocusVisible(handler: (FocusedVisibleEvent) -> Unit): Component.Builder<*, *> {
+fun <B : Component.Builder<B>> (Component.Builder<B>).onFocusVisible(handler: (FocusedVisibleEvent) -> Unit): Component.Builder<*> {
     val dispatcher = createEventDispatcher(handler)
-    this.focusedHandler(EventHandler(dispatcher, "elma focus visible handler", 1, null))
+    this.focusedHandler(EventHandler(dispatcher, 1, null))
     return this
 }
 
-fun <C : Component<out Component<*>>, B : Component.Builder<C, B>> (Component.Builder<C, B>).onUnfocusVisible(handler: (UnfocusedVisibleEvent) -> Unit): Component.Builder<*, *> {
+fun <B : Component.Builder<B>> (Component.Builder<B>).onUnfocusVisible(handler: (UnfocusedVisibleEvent) -> Unit): Component.Builder<*> {
     val dispatcher = createEventDispatcher(handler)
-    this.unfocusedHandler(EventHandler(dispatcher, "elma unfocus visible handler", 1, null))
+    this.unfocusedHandler(EventHandler(dispatcher, 1, null))
     return this
 }
 
-fun <C : Component<out Component<*>>, B : Component.Builder<C, B>> (Component.Builder<C, B>).onFullImpressionVisible(handler: (FullImpressionVisibleEvent) -> Unit): Component.Builder<*, *> {
+fun <B : Component.Builder<B>> (Component.Builder<B>).onFullImpressionVisible(handler: (FullImpressionVisibleEvent) -> Unit): Component.Builder<*> {
     val dispatcher = createEventDispatcher(handler)
-    this.fullImpressionHandler(EventHandler(dispatcher, "elma full impression visible handler", 1, null))
+    this.fullImpressionHandler(EventHandler(dispatcher, 1, null))
     return this
 }
 
 fun (EditText.Builder).onTextChanged(handler: (String) -> Unit): EditText.Builder {
-    val dispatcher = createEventDispatcher<TextChangedEvent>{ evt->
+    val dispatcher = createEventDispatcher<TextChangedEvent> { evt ->
         val txt = evt.text
         if (!txt.isNullOrEmpty()) {
             handler(txt)
         }
     }
-    this.textChangedEventHandler(com.facebook.litho.EventHandler<TextChangedEvent>(dispatcher, "elma text changed handler", 1, null))
+    this.textChangedEventHandler(com.facebook.litho.EventHandler<TextChangedEvent>(dispatcher, 1, null))
     return this
 }
 
@@ -90,11 +90,11 @@ fun (EditText.Builder).onTextChangedWithThrottling(wait: Long = 300, handler: (S
             channel.offer(txt)
         }
     }
-    this.textChangedEventHandler(com.facebook.litho.EventHandler<TextChangedEvent>(dispatcher, "elma text changed handler", 1, null))
+    this.textChangedEventHandler(com.facebook.litho.EventHandler<TextChangedEvent>(dispatcher, 1, null))
     return this
 }
 
-inline fun <reified TEvent> createEventDispatcher(crossinline handler: (evt:TEvent) -> Unit): HasEventDispatcher {
+inline fun <reified TEvent> createEventDispatcher(crossinline handler: (evt: TEvent) -> Unit): HasEventDispatcher {
     val clickDispatcher = EventDispatcher { _, event ->
         if (event is TEvent) {
             handler(event)

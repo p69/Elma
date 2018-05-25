@@ -27,7 +27,6 @@ android {
     }
 
     buildToolsVersion '27.0.3'
-
 }
 
 dependencies {
@@ -36,7 +35,8 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:0.22.5'
     // Litho main
     implementation "com.facebook.litho:litho-core:$litho_version"
     compileOnly "com.facebook.litho:litho-annotations:$litho_version"

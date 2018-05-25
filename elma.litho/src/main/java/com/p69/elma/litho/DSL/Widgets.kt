@@ -6,7 +6,7 @@ import com.facebook.litho.widget.*
 import com.p69.elma.litho.ElmaLithoView
 
 
-fun <C : Component<out Component<*>>, B : Component.Builder<C, B>> widget(
+fun <B : Component.Builder<B>> widget(
         create: () -> B,
         init: B.() -> Unit): ElmaLithoView {
     val builder = create()

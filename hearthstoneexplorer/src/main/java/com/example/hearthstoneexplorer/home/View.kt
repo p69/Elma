@@ -32,22 +32,24 @@ object HomeUI {
                             widthDip(50f)
                             heightDip(50f)
                         }
-                    } else {
-                        grid(2) {
-                            settings {
-                                flexGrow(1f)
-                                backgroundColor(Color.GRAY)
-                            }
-                            items {
-                                for (card in model.cards) {
-                                    picassoImage {
-                                        imageUrl(card.img)
-                                        placeholderImageRes(R.drawable.cardback_123)
-                                    }
+                    }
+                    grid(2) {
+                        settings {
+                            flexGrow(1f)
+                            backgroundColor(Color.GRAY)
+                        }
+                        items {
+                            for (card in model.cards) {
+                                picassoImage {
+                                    imageUrl(card.img)
+                                    placeholderImageRes(R.drawable.cardback_123)
                                 }
                             }
                         }
                     }
+//                    recycler {
+//
+//                    }
                 }
             }
 }
